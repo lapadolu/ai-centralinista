@@ -3,7 +3,7 @@
 import { useSession, signOut } from 'next-auth/react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { LayoutDashboard, FileText, MapPin, BarChart3, CreditCard, Settings } from 'lucide-react';
+import { LayoutDashboard, FileText, MapPin, BarChart3, CreditCard, Settings, Phone } from 'lucide-react';
 import { SupportButton } from '@/components/SupportButton';
 
 export default function DashboardLayout({
@@ -31,11 +31,15 @@ export default function DashboardLayout({
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
     { name: 'Lead CRM', href: '/dashboard/leads', icon: FileText },
+    { name: 'Chiamate', href: '/dashboard/calls', icon: Phone },
     { name: 'Mappa Zone', href: '/dashboard/zones', icon: MapPin },
     { name: 'Analytics', href: '/dashboard/analytics', icon: BarChart3 },
     { name: 'Setup', href: '/dashboard/setup', icon: Settings },
     { name: 'Abbonamenti', href: '/dashboard/billing', icon: CreditCard },
   ];
+
+  // Nascondi sidebar su onboarding
+  const isOnboarding = pathname === '/dashboard/onboarding';
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -49,25 +53,27 @@ export default function DashboardLayout({
                 <span className="text-sm font-normal ml-2 text-slate-600">by Helping Hand</span>
               </h1>
               
-              <div className="hidden md:flex gap-1">
-                {navigation.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition ${
-                        pathname === item.href
-                          ? 'bg-red-50 text-red-600'
-                          : 'text-slate-600 hover:bg-slate-50'
-                      }`}
-                    >
-                      <Icon className="w-4 h-4" />
-                      {item.name}
-                    </Link>
-                  );
-                })}
-              </div>
+              {!isOnboarding && (
+                <div className="hidden md:flex gap-1">
+                  {navigation.map((item) => {
+                    const Icon = item.icon;
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition ${
+                          pathname === item.href
+                            ? 'bg-red-50 text-red-600'
+                            : 'text-slate-600 hover:bg-slate-50'
+                        }`}
+                      >
+                        <Icon className="w-4 h-4" />
+                        {item.name}
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             <div className="flex items-center gap-4">

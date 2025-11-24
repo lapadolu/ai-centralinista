@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { CheckCircle2, Phone, AlertCircle, Clock, MessageCircle } from 'lucide-react';
+import { CheckCircle2, Phone, AlertCircle, Clock, MessageCircle, ExternalLink } from 'lucide-react';
 import { Order } from '@/lib/firebase';
 import { PHONE_PROVIDERS, getPhoneProviderLabel } from '@/lib/config';
+import Link from 'next/link';
 
 export default function SetupPage() {
   const { data: session } = useSession();
@@ -245,6 +246,16 @@ export default function SetupPage() {
                   <p className="text-sm text-slate-900 flex-1">{instruction}</p>
                 </div>
               ))}
+            </div>
+            <div className="mt-4 pt-4 border-t border-slate-200">
+              <Link
+                href="/guida-call-forwarding"
+                target="_blank"
+                className="inline-flex items-center gap-2 text-sm text-red-700 hover:text-red-800 font-medium"
+              >
+                <ExternalLink className="w-4 h-4" />
+                Vedi guida completa con codici rapidi e istruzioni dettagliate
+              </Link>
             </div>
           </div>
         )}

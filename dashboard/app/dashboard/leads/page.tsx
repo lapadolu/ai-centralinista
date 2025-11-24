@@ -15,6 +15,8 @@ interface Lead {
   status: 'nuovo' | 'contattato' | 'chiuso';
   timestamp: string;
   duration: number;
+  priority: 'alta' | 'media' | 'bassa';
+  score: number; // Lead score 0-100
 }
 
 export default function LeadsPage() {
@@ -33,38 +35,58 @@ export default function LeadsPage() {
       const response = await fetch('/api/dashboard/leads');
       if (!response.ok) throw new Error('Failed to fetch leads');
       const data = await response.json();
-      setLeads(data.leads || []);
+      // Calcola priority e score per ogni lead
+      const leadsWithPriority = (data.leads || []).map((lead: any) => {
+        let score = 50; // Base score
+        let priority: 'alta' | 'media' | 'bassa' = 'media';
+        
+        // Aumenta score se ha budget specificato
+        if (lead.budget && lead.budget !== 'Non specificato') {
+          score += 20;
+        }
+        
+        // Aumenta score se ha note dettagliate
+        if (lead.note && lead.note.length > 50) {
+          score += 15;
+        }
+        
+        // Aumenta score se tipo_richiesta è "comprare" (più probabile chiusura)
+        if (lead.tipo_richiesta?.toLowerCase() === 'comprare') {
+          score += 10;
+        }
+        
+        // Aumenta score se zona è specificata
+        if (lead.zona && lead.zona !== 'Non specificato') {
+          score += 10;
+        }
+        
+        // Aumenta score se durata chiamata > 2 minuti (interesse maggiore)
+        if (lead.duration > 120) {
+          score += 5;
+        }
+        
+        // Determina priority basata su score
+        if (score >= 75) priority = 'alta';
+        else if (score >= 50) priority = 'media';
+        else priority = 'bassa';
+        
+        return { ...lead, priority, score: Math.min(100, score) };
+      });
+      
+      // Ordina per priority (alta -> media -> bassa) e poi per score
+      leadsWithPriority.sort((a: any, b: any) => {
+        const priorityOrder = { alta: 3, media: 2, bassa: 1 };
+        if (priorityOrder[a.priority] !== priorityOrder[b.priority]) {
+          return priorityOrder[b.priority] - priorityOrder[a.priority];
+        }
+        return b.score - a.score;
+      });
+      
+      setLeads(leadsWithPriority);
     } catch (error) {
       console.error('Error loading leads:', error);
-      // Fallback a mock data se API fallisce
-      setLeads([
-      {
-        id: '1',
-        nome: 'Marco Rossi',
-        telefono: '+39 333 123 4567',
-        tipo_richiesta: 'comprare',
-        zona: 'Porta Romana',
-        tipo_immobile: 'Bilocale',
-        budget: '300.000-350.000€',
-        note: 'Cerca appartamento luminoso, preferibilmente con balcone',
-        status: 'nuovo',
-        timestamp: '2025-11-12 16:45',
-        duration: 225
-      },
-      {
-        id: '2',
-        nome: 'Laura Bianchi',
-        telefono: '+39 345 678 9012',
-        tipo_richiesta: 'vendere',
-        zona: 'Navigli',
-        tipo_immobile: 'Trilocale',
-        budget: 'Non specificato',
-        note: 'Appartamento ristrutturato 2 anni fa',
-        status: 'contattato',
-        timestamp: '2025-11-12 15:30',
-        duration: 180
-      }
-    ]);
+      // Nessun fallback - mostra lista vuota se API fallisce
+      setLeads([]);
     }
   };
 
@@ -167,11 +189,18 @@ export default function LeadsPage() {
       {/* Leads List */}
       <div className="bg-white rounded-lg shadow divide-y divide-slate-100">
         {filteredLeads.map((lead) => (
-          <div key={lead.id} className="p-6 hover:bg-slate-50 transition">
+          <div 
+            key={lead.id} 
+            className={`p-6 hover:bg-slate-50 transition border-l-4 ${
+              lead.priority === 'alta' ? 'border-red-500' :
+              lead.priority === 'media' ? 'border-yellow-500' :
+              'border-slate-300'
+            }`}
+          >
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 {/* Header */}
-                <div className="flex items-center gap-3 mb-3">
+                <div className="flex items-center gap-3 mb-3 flex-wrap">
                   <h3 className="text-lg font-semibold text-slate-900">{lead.nome}</h3>
                   <span className="text-xs text-slate-500">{lead.timestamp}</span>
                   <span className={`px-2 py-1 rounded text-xs font-medium ${
@@ -181,28 +210,60 @@ export default function LeadsPage() {
                   }`}>
                     {lead.status.toUpperCase()}
                   </span>
+                  <span className={`px-2 py-1 rounded text-xs font-bold ${
+                    lead.priority === 'alta' ? 'bg-red-500 text-white' :
+                    lead.priority === 'media' ? 'bg-yellow-500 text-white' :
+                    'bg-slate-400 text-white'
+                  }`}>
+                    {lead.priority.toUpperCase()} ({lead.score})
+                  </span>
+                  {lead.duration > 0 && (
+                    <span className="text-xs text-slate-500">
+                      Durata: {Math.floor(lead.duration / 60)}:{(lead.duration % 60).toString().padStart(2, '0')}
+                    </span>
+                  )}
+                </div>
+
+                {/* Critical Info Grid */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-3">
+                  <div>
+                    <div className="text-xs text-slate-500 mb-1">Telefono</div>
+                    <div className="text-sm font-medium text-slate-900">{lead.telefono}</div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-slate-500 mb-1">Richiesta</div>
+                    <div className="text-sm font-medium text-slate-900">{lead.tipo_richiesta.toUpperCase()}</div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-slate-500 mb-1">Zona</div>
+                    <div className="text-sm font-medium text-slate-900">{lead.zona}</div>
+                  </div>
+                  {lead.budget !== 'Non specificato' && (
+                    <div>
+                      <div className="text-xs text-slate-500 mb-1">Budget</div>
+                      <div className="text-sm font-medium text-green-600">{lead.budget}</div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Note Priority */}
-                {lead.note && (
-                  <div className="bg-blue-50 border-l-4 border-blue-500 p-3 mb-3">
-                    <div className="text-sm font-medium text-blue-900">{lead.note}</div>
+                {lead.note && lead.note.trim() && (
+                  <div className={`border-l-4 p-3 mb-3 ${
+                    lead.priority === 'alta' ? 'bg-red-50 border-red-500' :
+                    lead.priority === 'media' ? 'bg-yellow-50 border-yellow-500' :
+                    'bg-blue-50 border-blue-500'
+                  }`}>
+                    <div className="text-xs font-semibold text-slate-700 mb-1">Note Cliente:</div>
+                    <div className="text-sm text-slate-900">{lead.note}</div>
                   </div>
                 )}
 
-                {/* Contact */}
-                <div className="text-slate-900 font-medium mb-2">
-                  {lead.telefono}
-                </div>
-
                 {/* Request Summary */}
                 <div className="text-sm text-slate-600">
-                  {lead.tipo_richiesta.toUpperCase()}
-                  {' · '}
-                  {lead.tipo_immobile}
-                  {' · '}
-                  zona {lead.zona}
-                  {lead.budget !== 'Non specificato' && ` · budget ${lead.budget}`}
+                  <span className="font-medium">{lead.tipo_immobile}</span>
+                  {lead.budget !== 'Non specificato' && (
+                    <> · <span className="text-green-600 font-medium">{lead.budget}</span></>
+                  )}
                 </div>
               </div>
 
