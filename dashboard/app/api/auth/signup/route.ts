@@ -77,13 +77,18 @@ export async function POST(request: NextRequest) {
   } catch (error: any) {
     console.error('Error creating user:', error);
     
-    // Don't leak internal errors
-    const errorMessage = error instanceof z.ZodError
-      ? 'Dati non validi'
-      : 'Errore durante la creazione dell\'account';
+    // Don't leak internal errors, but log them for debugging
+    if (error instanceof z.ZodError) {
+      console.error('Validation errors:', error.issues);
+      const firstError = error.issues[0];
+      return NextResponse.json(
+        { error: firstError.message, details: error.issues },
+        { status: 400 }
+      );
+    }
     
     return NextResponse.json(
-      { error: errorMessage },
+      { error: 'Errore durante la creazione dell\'account' },
       { status: 500 }
     );
   }

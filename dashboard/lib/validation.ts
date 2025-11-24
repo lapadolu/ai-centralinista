@@ -21,12 +21,12 @@ export const passwordSchema = z
   .regex(/[0-9]/, 'La password deve contenere almeno un numero')
   .regex(/[^A-Za-z0-9]/, 'La password deve contenere almeno un carattere speciale');
 
-// Name validation
+// Name validation - più permissivo per supportare nomi internazionali
 export const nameSchema = z
   .string()
   .min(2, 'Il nome deve essere di almeno 2 caratteri')
   .max(100, 'Il nome non può superare 100 caratteri')
-  .regex(/^[a-zA-Zàèéìòù\s'-]+$/, 'Il nome può contenere solo lettere, spazi, apostrofi e trattini')
+  .regex(/^[\p{L}\s'-]+$/u, 'Il nome può contenere solo lettere, spazi, apostrofi e trattini')
   .trim();
 
 // Signup schema (for frontend validation with confirmPassword)
