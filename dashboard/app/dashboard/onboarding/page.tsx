@@ -184,7 +184,7 @@ export default function OnboardingPage() {
                 ))}
               </ul>
               <Link
-                href={`/api/billing/create-checkout?planId=${plan.id}`}
+                href={`/dashboard/checkout?planId=${plan.id}`}
                 className={`block w-full text-center py-3 px-4 rounded-lg font-semibold transition ${
                   plan.id === 'pro'
                     ? 'bg-red-700 hover:bg-red-800 text-white'
@@ -207,7 +207,7 @@ export default function OnboardingPage() {
           Attiva il tuo centralino AI in 5 minuti. Setup professionale incluso, nessun impegno a lungo termine.
         </p>
         <Link
-          href="/api/billing/create-checkout?planId=starter"
+          href="/dashboard/checkout?planId=starter"
           className="inline-flex items-center gap-2 bg-white text-red-900 px-8 py-4 rounded-lg font-semibold hover:bg-red-50 transition"
         >
           Attiva Ora

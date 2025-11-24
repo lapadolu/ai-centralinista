@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getStripe, verifyWebhookSignature } from '@/lib/stripe';
 import { db } from '@/lib/firebase';
 import { PRICING_PLANS } from '@/lib/pricing';
-import { createOrder } from '@/lib/orders';
+import { createOrder, getOrder } from '@/lib/orders';
 import { sendOrderConfirmationEmail } from '@/lib/email';
+import { autoSetupOrder } from '@/lib/auto-setup';
 import Stripe from 'stripe';
 
 /**
@@ -212,12 +213,13 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       }
     );
 
-    // Aggiorna order con tutti i dati completi (inclusi WhatsApp multipli)
+    // Aggiorna order con tutti i dati completi (inclusi WhatsApp multipli e voice_id)
     await db.collection('orders').doc(orderId).update({
       phone_provider: config.phone_provider,
       whatsapp_configs: config.whatsapp_configs,
       response_mode: config.response_mode,
       default_structured_output: config.default_structured_output,
+      voice_id: config.voice_id, // Salva voice selection se presente
     });
 
     // Cancella pending checkout (usa ref se è un QueryDocumentSnapshot, altrimenti doc)
@@ -229,6 +231,28 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 
     console.log(`Order created: ${orderId} for ${userEmail}`);
     
+    // 🚀 AUTO-SETUP: Crea automaticamente assistant Vapi e compra numero Twilio
+    try {
+      const order = await getOrder(orderId);
+      if (order) {
+        console.log(`Starting auto-setup for order ${orderId}...`);
+        const setupResult = await autoSetupOrder(order);
+        
+        if (setupResult.success) {
+          console.log(`✅ Auto-setup completed for order ${orderId}:`, {
+            vapiAssistantId: setupResult.vapiAssistantId,
+            twilioPhoneNumber: setupResult.twilioPhoneNumber,
+          });
+        } else {
+          console.error(`❌ Auto-setup failed for order ${orderId}:`, setupResult.error);
+          // Non bloccare il flusso - l'admin può completare manualmente
+        }
+      }
+    } catch (error) {
+      console.error('Error during auto-setup:', error);
+      // Non bloccare il flusso - l'admin può completare manualmente
+    }
+    
     // Invia email di conferma ordine
     try {
       const planName = PRICING_PLANS[planId]?.name || planId;
@@ -237,9 +261,9 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       console.error('Error sending order confirmation email:', error);
       // Non bloccare il flusso se l'email fallisce
     }
-    } else {
-      console.log(`No config found for ${userEmail}, creating subscription only`);
-    }
+  } else {
+    console.log(`No config found for ${userEmail}, creating subscription only`);
+  }
 
   // Aggiorna user profile
   const now = new Date();

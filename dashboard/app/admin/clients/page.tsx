@@ -225,6 +225,60 @@ export default function ClientsManagement() {
                 </div>
               )}
 
+              {selectedClient.status === 'trial' && !selectedClient.plan && (
+                <div className="border-t border-slate-200 pt-6 mb-6">
+                  <h3 className="font-semibold text-slate-900 mb-4">Attiva Abbonamento</h3>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={async () => {
+                        try {
+                          const response = await fetch(`/api/admin/users/${selectedClient.email}/activate-subscription`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ planId: 'starter' }),
+                          });
+                          const data = await response.json();
+                          if (response.ok) {
+                            alert(`Abbonamento Starter attivato con successo!`);
+                            window.location.reload();
+                          } else {
+                            alert(`Errore: ${data.error}`);
+                          }
+                        } catch (error) {
+                          alert(`Errore: ${error}`);
+                        }
+                      }}
+                      className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition"
+                    >
+                      Attiva Starter (€109/mese)
+                    </button>
+                    <button
+                      onClick={async () => {
+                        try {
+                          const response = await fetch(`/api/admin/users/${selectedClient.email}/activate-subscription`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ planId: 'pro' }),
+                          });
+                          const data = await response.json();
+                          if (response.ok) {
+                            alert(`Abbonamento Pro attivato con successo!`);
+                            window.location.reload();
+                          } else {
+                            alert(`Errore: ${data.error}`);
+                          }
+                        } catch (error) {
+                          alert(`Errore: ${error}`);
+                        }
+                      }}
+                      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition"
+                    >
+                      Attiva Pro (€179/mese)
+                    </button>
+                  </div>
+                </div>
+              )}
+
               <div className="flex gap-3 mt-6 pt-6 border-t border-slate-200">
                 <button className="flex-1 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition">
                   Modifica Cliente

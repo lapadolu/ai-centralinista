@@ -46,6 +46,14 @@ export async function GET(request: NextRequest) {
       };
     }
 
+    // Recupera lead status da collection separata
+    const leadStatusDocs = await db.collection('lead_status').get();
+    const leadStatusMap = new Map<string, 'nuovo' | 'contattato' | 'chiuso'>();
+    leadStatusDocs.docs.forEach(doc => {
+      const statusData = doc.data();
+      leadStatusMap.set(statusData.lead_id, statusData.status);
+    });
+
     const leads = callsSnapshot.docs.map((doc) => {
       const data = doc.data() as Call;
       const clientInfo = (data.client_info || {}) as {
@@ -58,8 +66,11 @@ export async function GET(request: NextRequest) {
         note?: string;
       };
       
+      const leadId = data.call_id;
+      const status = leadStatusMap.get(leadId) || 'nuovo';
+      
       return {
-        id: data.call_id,
+        id: leadId,
         nome: clientInfo.nome || 'Non specificato',
         telefono: clientInfo.telefono || data.customer_number,
         tipo_richiesta: clientInfo.tipo_richiesta || 'Non specificato',
@@ -67,7 +78,7 @@ export async function GET(request: NextRequest) {
         tipo_immobile: clientInfo.tipo_immobile || 'Non specificato',
         budget: clientInfo.budget || 'Non specificato',
         note: clientInfo.note || '',
-        status: 'nuovo' as const,
+        status: status as 'nuovo' | 'contattato' | 'chiuso',
         timestamp: data.ended_at?.toDate?.()?.toLocaleString('it-IT') || new Date().toLocaleString('it-IT'),
         duration: data.duration || 0,
         transcript: data.transcript || '',

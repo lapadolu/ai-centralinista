@@ -18,56 +18,48 @@ export default function AnalyticsPage() {
   const [userIndustry, setUserIndustry] = useState<string>('');
   const [calls, setCalls] = useState<any[]>([]);
   const [data, setData] = useState<AnalyticsData>({
-    intentBreakdown: { comprare: 68, vendere: 32 },
-    topZones: [
-      { zona: 'Porta Romana', count: 89 },
-      { zona: 'Navigli', count: 67 },
-      { zona: 'Lambrate', count: 45 },
-      { zona: 'Centro', count: 38 },
-      { zona: 'Isola', count: 28 }
-    ],
-    propertyTypes: [
-      { tipo: 'Bilocale', percentage: 45 },
-      { tipo: 'Trilocale', percentage: 30 },
-      { tipo: 'Monolocale', percentage: 15 },
-      { tipo: 'Villa', percentage: 10 }
-    ],
-    topFeatures: [
-      { feature: 'Balcone', percentage: 78 },
-      { feature: 'Luminoso', percentage: 65 },
-      { feature: 'Posto auto', percentage: 52 },
-      { feature: 'Ristrutturato', percentage: 41 },
-      { feature: 'Piano alto', percentage: 33 }
-    ],
-    averageBudget: '€285.000',
-    conversionRate: 68
+    intentBreakdown: { comprare: 0, vendere: 0 },
+    topZones: [],
+    propertyTypes: [],
+    topFeatures: [],
+    averageBudget: 'N/A',
+    conversionRate: 0
   });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadUserData();
-    loadCalls();
+    loadAnalytics();
   }, []);
 
-  const loadUserData = async () => {
+  const loadAnalytics = async () => {
     try {
-      // TODO: Fetch user industry from profile
-      // Per ora default a immobiliare
+      const response = await fetch('/api/dashboard/analytics');
+      if (!response.ok) throw new Error('Failed to fetch analytics');
+      const analyticsData = await response.json();
+      
+      setData({
+        intentBreakdown: analyticsData.intentBreakdown || { comprare: 0, vendere: 0 },
+        topZones: analyticsData.topZones || [],
+        propertyTypes: analyticsData.propertyTypes || [],
+        topFeatures: analyticsData.topFeatures || [],
+        averageBudget: analyticsData.averageBudget || 'N/A',
+        conversionRate: analyticsData.conversionRate || 0
+      });
+      
+      // Set industry from user profile or default
       setUserIndustry('immobiliare');
     } catch (error) {
-      console.error('Error loading user data:', error);
+      console.error('Error loading analytics:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const loadCalls = async () => {
-    try {
-      // TODO: Fetch calls from API
-      // const response = await fetch('/api/calls');
-      // const data = await response.json();
-      // setCalls(data.calls || []);
-    } catch (error) {
-      console.error('Error loading calls:', error);
-    }
-  };
+  if (loading) {
+    return <div className="text-center py-12">Caricamento analytics...</div>;
+  }
+
+  const hasData = data.topZones.length > 0 || data.propertyTypes.length > 0;
 
   return (
     <div className="space-y-6">
@@ -75,9 +67,18 @@ export default function AnalyticsPage() {
       <div>
         <h1 className="text-2xl font-bold text-slate-900">Analytics</h1>
         <p className="text-slate-600 mt-1">
-          Insights e statistiche personalizzate per il tuo settore
+          Insights e statistiche basate sulle tue chiamate reali
         </p>
       </div>
+
+      {!hasData && (
+        <div className="bg-slate-50 border border-slate-200 rounded-lg p-8 text-center">
+          <p className="text-slate-600 mb-4">Nessun dato disponibile ancora</p>
+          <p className="text-sm text-slate-500">
+            Le analytics appariranno qui automaticamente dopo le prime chiamate ricevute
+          </p>
+        </div>
+      )}
 
       {/* Industry-Specific Analytics */}
       {userIndustry && (
@@ -107,9 +108,11 @@ export default function AnalyticsPage() {
         <div className="bg-white rounded-lg shadow p-6">
           <div className="text-sm text-slate-600 mb-2">Zona Top</div>
           <div className="text-4xl font-bold text-purple-600 mb-1">
-            {data.topZones[0]?.zona}
+            {data.topZones[0]?.zona || 'N/A'}
           </div>
-          <div className="text-sm text-slate-500">{data.topZones[0]?.count} richieste</div>
+          <div className="text-sm text-slate-500">
+            {data.topZones[0]?.count || 0} richieste
+          </div>
         </div>
       </div>
 
@@ -212,15 +215,23 @@ export default function AnalyticsPage() {
         </div>
       </div>
 
-      {/* Insights */}
-      <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6 border border-blue-200">
-        <h2 className="text-lg font-semibold text-slate-900 mb-3">Insights</h2>
-        <div className="space-y-2 text-sm text-slate-700">
-          <p>• <strong>Focus su bilocali:</strong> 45% delle richieste. Aumenta stock in Porta Romana.</p>
-          <p>• <strong>Balcone è chiave:</strong> 78% lo richiede. Evidenzia nelle proposte.</p>
-          <p>• <strong>Budget medio €285k:</strong> Target fascia media. Ottimizza offerte in questo range.</p>
+      {/* Insights - Solo se ci sono dati */}
+      {hasData && (
+        <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6 border border-blue-200">
+          <h2 className="text-lg font-semibold text-slate-900 mb-3">Insights</h2>
+          <div className="space-y-2 text-sm text-slate-700">
+            {data.topZones[0] && (
+              <p>• <strong>Zona più richiesta:</strong> {data.topZones[0].zona} con {data.topZones[0].count} richieste. Considera di aumentare lo stock in questa zona.</p>
+            )}
+            {data.topFeatures[0] && (
+              <p>• <strong>Feature più importante:</strong> {data.topFeatures[0].feature} richiesta dal {data.topFeatures[0].percentage}% dei clienti. Evidenzia questa caratteristica nelle proposte.</p>
+            )}
+            {data.averageBudget !== 'N/A' && (
+              <p>• <strong>Budget medio:</strong> {data.averageBudget}. Target questa fascia di prezzo per ottimizzare le offerte.</p>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

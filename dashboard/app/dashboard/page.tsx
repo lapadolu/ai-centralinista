@@ -32,24 +32,27 @@ export default function DashboardHome() {
 
   const checkOrderAndLoadData = async () => {
     try {
-      // Prima controlla se ha un ordine
+      // Carica i dati della dashboard
+      await loadData();
+      
+      // Controlla se ha un ordine
       const orderResponse = await fetch('/api/orders/current');
       const orderData = await orderResponse.json();
       
-      if (orderResponse.ok && orderData.order) {
+      const hasActiveOrder = orderResponse.ok && orderData.order;
+      
+      // Se ha ordine, mostra dashboard normale
+      // Se non ha ordine ma ha chiamate, significa che il servizio è attivo (mostra dashboard)
+      // Se non ha né ordine né chiamate, mostra banner onboarding
+      if (hasActiveOrder || stats.month > 0 || recentCalls.length > 0) {
         setHasOrder(true);
-        // Se ha ordine, carica i dati della dashboard
-        await loadData();
       } else {
-        // Se non ha ordine, mostra onboarding
         setHasOrder(false);
-        router.push('/dashboard/onboarding');
-        return;
       }
     } catch (error) {
       console.error('Error checking order:', error);
-      // In caso di errore, prova comunque a caricare dati
-      await loadData();
+      // In caso di errore, mostra comunque la dashboard (fail-safe)
+      setHasOrder(true);
     } finally {
       setCheckingOrder(false);
       setLoading(false);
@@ -79,9 +82,61 @@ export default function DashboardHome() {
     return <div className="text-center py-12">Caricamento...</div>;
   }
 
-  // Se non ha ordine, non mostrare nulla (redirect in corso)
+  // Se non ha ordine né chiamate, mostra banner per attivare servizio
   if (!hasOrder) {
-    return null;
+    return (
+      <div className="space-y-6">
+        <div className="bg-gradient-to-r from-red-700 to-red-950 rounded-xl p-8 text-white text-center">
+          <h2 className="text-2xl font-bold mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
+            Attiva il tuo Centralino AI
+          </h2>
+          <p className="text-red-100 mb-6 max-w-2xl mx-auto">
+            Scegli un piano per iniziare a ricevere chiamate e gestire i tuoi lead automaticamente.
+          </p>
+          <Link
+            href="/dashboard/onboarding"
+            className="inline-flex items-center gap-2 bg-white text-red-900 px-8 py-4 rounded-lg font-semibold hover:bg-red-50 transition"
+          >
+            Vedi Piani Disponibili
+          </Link>
+        </div>
+        
+        {/* Mostra comunque la dashboard vuota per vedere la struttura */}
+        <div className="space-y-6 opacity-50">
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900">
+              Benvenuto, {session?.user?.name || 'Agente'}
+            </h1>
+            <p className="text-slate-600 mt-1">
+              Dashboard chiamate AI Centralinista
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="bg-white rounded-lg shadow p-6">
+              <div className="text-sm font-medium text-slate-600">Oggi</div>
+              <div className="text-3xl font-bold text-slate-900 mt-2">0</div>
+              <div className="text-sm text-slate-500 mt-1">0 lead validi</div>
+            </div>
+            <div className="bg-white rounded-lg shadow p-6">
+              <div className="text-sm font-medium text-slate-600">Settimana</div>
+              <div className="text-3xl font-bold text-slate-900 mt-2">0</div>
+              <div className="text-sm text-slate-500 mt-1">chiamate</div>
+            </div>
+            <div className="bg-white rounded-lg shadow p-6">
+              <div className="text-sm font-medium text-slate-600">Mese</div>
+              <div className="text-3xl font-bold text-slate-900 mt-2">0</div>
+              <div className="text-sm text-slate-500 mt-1">chiamate</div>
+            </div>
+            <div className="bg-white rounded-lg shadow p-6">
+              <div className="text-sm font-medium text-slate-600">Lead Totali</div>
+              <div className="text-3xl font-bold text-slate-900 mt-2">0</div>
+              <div className="text-sm text-slate-500 mt-1">questo mese</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
