@@ -1,5 +1,3 @@
 functions-framework==3.*
 twilio==8.*
 google-cloud-firestore==2.*
-openai==1.*
-requests==2.*

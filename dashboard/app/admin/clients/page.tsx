@@ -23,25 +23,7 @@ interface Client {
 }
 
 export default function ClientsManagement() {
-  const [clients, setClients] = useState<Client[]>([
-    {
-      id: '1',
-      name: 'Federico',
-      email: 'federico@iconacasa.it',
-      company: 'IconaCasa Milano',
-      whatsapp: '+393394197445',
-      plan: 'starter',
-      status: 'active',
-      vapiAssistantId: 'fec18106-fda6-4b18-a361-f435b6d19d7b',
-      phoneNumber: '+1 478 654 1644',
-      totalCalls: 342,
-      totalLeads: 234,
-      conversionRate: 68,
-      monthlyCost: 49,
-      notes: 'Cliente pilota, agenzia immobiliare Milano',
-      createdAt: '2025-11-01'
-    }
-  ]);
+  const [clients, setClients] = useState<Client[]>([]);
 
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [showAddClient, setShowAddClient] = useState(false);

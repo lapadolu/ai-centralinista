@@ -1,0 +1,93 @@
+# Cursor Rules - FIXER by Helping Hand
+
+## Project Structure
+- `dashboard/` - Next.js 15 application (TypeScript, React)
+- `backend/functions/` - Google Cloud Functions (Python 3.11)
+- `scripts/` - Utility scripts (Node.js)
+
+## Code Style
+
+### TypeScript/Next.js
+- Use TypeScript strict mode where possible
+- Prefer functional components with hooks
+- Use Next.js App Router conventions
+- API routes in `app/api/`
+- Use `@/` alias for imports (configured in tsconfig.json)
+
+### Python
+- Follow PEP 8 style guide
+- Use type hints where possible
+- Cloud Functions should be stateless
+- Use logging instead of print statements
+
+## Key Technologies
+- **Frontend**: Next.js 15, React, TypeScript, Tailwind CSS
+- **Backend**: Google Cloud Functions (Python), Firebase Firestore
+- **Auth**: NextAuth.js with Firestore
+- **Payments**: Stripe
+- **Voice AI**: Vapi.ai
+- **Messaging**: Twilio (SMS/WhatsApp)
+
+## Important Patterns
+
+### API Routes
+- Always verify authentication with `getServerSession(authOptions)`
+- Admin routes must check `role === 'admin'`
+- Return proper HTTP status codes
+- Handle errors gracefully
+
+### Firestore
+- Use Firebase Admin SDK in API routes
+- Client-side uses Firebase Client SDK
+- Security rules in `backend/firestore.rules`
+
+### Environment Variables
+- Never commit secrets
+- Use Vercel env vars for production
+- Use GCP env vars for Cloud Functions
+
+## File Locations
+
+### Key Files
+- `STATUS.md` - Project status and credentials
+- `INTEGRAZIONE_TWILIO_WHATSAPP.md` - Twilio integration guide
+- `REVISIONE_MESSAGGIO_WHATSAPP.md` - WhatsApp message review
+- `vercel.json` - Vercel deployment config
+- `backend/firestore.rules` - Firestore security rules
+
+### Configuration
+- `dashboard/next.config.js` - Next.js config
+- `dashboard/tsconfig.json` - TypeScript config
+- `dashboard/tailwind.config.js` - Tailwind config
+- `backend/functions/requirements.txt` - Python dependencies
+
+## Common Tasks
+
+### Adding New API Route
+1. Create file in `dashboard/app/api/[route]/route.ts`
+2. Add authentication check
+3. Add error handling
+4. Update types in `dashboard/lib/firebase.ts` if needed
+
+### Adding New Cloud Function
+1. Create file in `backend/functions/`
+2. Add to `requirements.txt` if new dependencies
+3. Update `main.py` if needed
+4. Deploy with `deploy-vapi-webhook.sh`
+
+### Updating WhatsApp Message
+- Edit `backend/functions/notification.py`
+- Function: `send_whatsapp_notification()`
+- Variable: `message_parts` (line ~126)
+
+## Security
+- Always verify webhook signatures (Vapi, Stripe)
+- Never expose API keys in client code
+- Use Firestore security rules
+- Validate all user inputs
+
+## Deployment
+- Vercel: Auto-deploys from `main` branch
+- GCP Functions: Use `deploy-vapi-webhook.sh`
+- Environment vars must be set in both platforms
+

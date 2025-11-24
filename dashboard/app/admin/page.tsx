@@ -18,34 +18,7 @@ interface ClientOverview {
 }
 
 export default function AdminDashboard() {
-  const [clients, setClients] = useState<ClientOverview[]>([
-    {
-      id: '1',
-      name: 'Federico',
-      email: 'federico@iconacasa.it',
-      company: 'IconaCasa Milano',
-      plan: 'Starter',
-      status: 'active',
-      totalCalls: 342,
-      totalLeads: 234,
-      conversionRate: 68,
-      monthlyCost: 49,
-      lastCall: '2 ore fa'
-    },
-    {
-      id: '2',
-      name: 'Marco',
-      email: 'marco@remax.it',
-      company: 'RE/MAX Roma',
-      plan: 'Pro',
-      status: 'trial',
-      totalCalls: 127,
-      totalLeads: 89,
-      conversionRate: 70,
-      monthlyCost: 0,
-      lastCall: '1 giorno fa'
-    }
-  ]);
+  const [clients, setClients] = useState<ClientOverview[]>([]);
 
   const [globalStats, setGlobalStats] = useState({
     totalClients: 2,

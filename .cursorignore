@@ -1,0 +1,81 @@
+# Dependencies
+node_modules/
+dashboard/node_modules/
+**/node_modules/
+
+# Build outputs
+.next/
+dashboard/.next/
+out/
+build/
+dist/
+
+# Environment files
+.env
+.env.local
+.env*.local
+**/.env
+**/.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+*.egg-info/
+
+# Firebase
+service-account.json
+*-key.json
+firebase-adminsdk-*.json
+.firebase/
+
+# Vercel
+.vercel/
+vercel.json.backup
+
+# Git
+.git/
+.gitignore
+
+# Credentials
+credentials.txt
+*.pem
+*.key
+
+# Test files
+coverage/
+.nyc_output/
+*.test.js
+*.test.ts
+*.spec.js
+*.spec.ts
+
+# Documentation (keep only essential)
+*.md
+!STATUS.md
+!README.md
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+

@@ -1,38 +1,105 @@
-# 🚀 AI Centralinista - SISTEMA FUNZIONANTE
+# Status Progetto - FIXER by Helping Hand
 
-## ✅ COMPLETATO
+**Ultimo aggiornamento:** 2025-01-XX
 
-### Backend
-- ✅ Progetto GCP: `ai-centralinista-2025`
-- ✅ Cloud Function deployata: `call-handler`
-- ✅ URL: `https://europe-west1-ai-centralinista-2025.cloudfunctions.net/call-handler`
-- ✅ Test: ✅ Risponde con TwiML corretto
+---
 
-### Dashboard
-- ✅ Next.js buildato con successo
-- ✅ Pronto per deploy su Vercel
+## ✅ Completato
 
-## 🎯 PROSSIMI PASSI
+### Fix Critici (2025-01-XX)
+- ✅ Multi-tenancy implementata - rimosso hardcoded user_id
+- ✅ Caching assistant_id → user_id per performance
+- ✅ Tracking chiamate mensili e overage billing
+- ✅ Firestore indexes creati (firestore.indexes.json)
+- ✅ Credenziali rimosse da file pubblici
+- ✅ Query Firestore ottimizzate (N+1 risolto)
 
-1. **Configura webhook Twilio** con nuovo URL
-2. **Deploy dashboard su Vercel**
-3. **Test chiamata reale**
-4. **Aspetta partita IVA** (2-3 giorni)
-5. **Acquista numero italiano**
-6. **Switch a numero italiano**
+### Implementazioni
+- ✅ Email notifications (Resend) - implementate, da configurare quando Resend disponibile
+- ✅ Test call automation - implementato
+- ✅ Admin role checks - implementati su tutte le routes
+- ✅ Firebase Admin credentials - configurate con service account JSON
+- ✅ Vapi API fallback endpoints - implementati (/v1 e /assistant)
+- ✅ Password hash fix - NextAuth usa `password_hash` correttamente
+- ✅ Dashboard API Routes - create e collegate a Firestore
+  - `/api/dashboard/leads` - GET, PATCH
+  - `/api/dashboard/stats` - GET
+  - `/api/dashboard/zones` - GET, POST
+- ✅ Dashboard Pages - tutte collegate a dati reali
+  - Leads page → fetcha da Firestore
+  - Stats page → statistiche reali
+  - Zones page → salva/carica da Firestore
+  - Billing page → mostra piano attivo
 
-## 📞 WEBHOOK TWILIO
+### Deployment
+- ✅ Cloud Function `vapi-webhook` deployata su GCP
+  - URL: `https://europe-west1-ai-centralinista-2025.cloudfunctions.net/vapi-webhook`
+  - Region: europe-west1
+  - Status: ACTIVE
 
-Cambia webhook da:
+### Configurazioni
+- ✅ Vercel environment variables configurate
+- ✅ Vapi Dashboard configurato
+- ✅ Stripe integrato e configurato
+
+---
+
+## ⚠️ In Corso
+
+### Integrazione Numero Twilio Italiano
+- [ ] Ricevere numero Twilio italiano (free-toll richiesto)
+- [ ] Configurare numero in Twilio Dashboard
+- [ ] Collega numero a Vapi Assistant
+- [ ] Configurare WhatsApp Business API sul numero
+- [ ] Aggiornare environment variables (Vercel + GCP)
+- [ ] Test chiamata + WhatsApp
+
+### Revisione e Ottimizzazione
+- [ ] Revisione messaggio WhatsApp (formato, tono, contenuto)
+- [ ] Test agente voice (prompt, tono, efficacia)
+- [ ] Demo all'amico
+- [ ] Test 2 settimane con cliente pilota
+- [ ] Deploy per altre agenzie immobiliari
+
+### Configurazioni Opzionali
+- [ ] Resend: configurare quando disponibile (email notifications)
+  - API Key: Configurata in Vercel environment variables
+  - From Email: `Helping Hand <noreply@helping-hand.it>` (dopo verifica dominio)
+
+---
+
+## Credenziali Importanti
+
+⚠️ **SICUREZZA:** Le credenziali sono configurate come environment variables in:
+- Vercel Dashboard → Settings → Environment Variables
+- Google Cloud Functions → Environment Variables
+- GCP Secret Manager (raccomandato per produzione)
+
+### Cloud Function URL
 ```
-https://api.us.elevenlabs.io/twilio/inbound_call
+https://europe-west1-ai-centralinista-2025.cloudfunctions.net/vapi-webhook
 ```
 
-A:
-```
-https://europe-west1-ai-centralinista-2025.cloudfunctions.net/call-handler
-```
+### Variabili d'Ambiente Richieste
+- `VAPI_API_KEY` - Vapi.ai API key
+- `TWILIO_ACCOUNT_SID` - Twilio Account SID
+- `TWILIO_AUTH_TOKEN` - Twilio Auth Token
+- `TWILIO_WHATSAPP_NUMBER` - Numero WhatsApp Twilio
+- `RESEND_API_KEY` - Resend API key (opzionale)
+- `FIREBASE_SERVICE_ACCOUNT_JSON` - Firebase service account (Vercel)
+- `NEXTAUTH_SECRET` - NextAuth secret
+- `STRIPE_SECRET_KEY` - Stripe secret key
+- `STRIPE_WEBHOOK_SECRET` - Stripe webhook secret
 
-## 🎉 RISULTATO
+---
 
-**Sistema completamente funzionante e pronto!**
+## File Essenziali
+
+- `STATUS.md` - Stato progetto
+- `deploy-vapi-webhook.sh` - Script deploy Cloud Function
+- `scripts/` - Script utility
+
+---
+
+**Status:** Pronto per produzione (manca solo Resend opzionale)
+

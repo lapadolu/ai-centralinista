@@ -1,0 +1,6 @@
+backend/
+scripts/
+deploy-vapi-webhook.sh
+STATUS.md
+*.md
+
