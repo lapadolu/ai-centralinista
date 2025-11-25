@@ -1,6 +1,6 @@
 # Status Progetto - FIXER by Helping Hand
 
-**Ultimo aggiornamento:** 2025-01-27
+**Ultimo aggiornamento:** 2025-01-27 (sera)
 
 ---
 
@@ -28,28 +28,40 @@
 - ✅ **Firestore indexes** - creati e configurati (firestore.indexes.json)
 - ✅ **Credenziali rimosse** - nessuna credenziale hardcoded nei file pubblici
 - ✅ **Query Firestore ottimizzate** - risolto problema N+1 queries
-- ✅ **Fix validazione signup** - separato schema frontend da schema API (Zod)
-- ✅ **Fix errore TypeScript** - corretto errore in guida-call-forwarding
-- ✅ **Favicon configurato** - icon.svg configurato correttamente
+- ✅ **Fix validazione signup** - separato schema frontend (`signupSchema`) da schema API (`signupApiSchema`) per risolvere errore "expected string, received undefined"
+- ✅ **Fix errore TypeScript** - corretto errore `guide.app` in guida-call-forwarding/page.tsx
+- ✅ **Favicon configurato** - icon.svg configurato correttamente in layout.tsx
+- ✅ **Rimossi dati fake dashboard** - eliminati statistiche hardcoded (68%, +15%, "Nov 2025")
+- ✅ **Schermata onboarding** - creata pagina `/dashboard/onboarding` per utenti senza abbonamento
+- ✅ **Analytics con dati reali** - creata API `/api/dashboard/analytics` che calcola tutto dalle chiamate reali
+- ✅ **Dashboard accessibile senza ordine** - se utente ha chiamate, può vedere dashboard anche senza ordine formale
+- ✅ **Configurazione Vercel** - creato vercel.json nella root con root directory dashboard
 
 ### Implementazioni Core
 - ✅ **Sistema di autenticazione** - NextAuth.js con Firestore, supporto admin/client
 - ✅ **Sistema di abbonamenti** - 3 piani (Starter €109, Pro €179, Enterprise €329)
 - ✅ **Dashboard completa** - tutte le pagine collegate a dati reali da Firestore
-  - `/dashboard` - Home con statistiche
-  - `/dashboard/leads` - CRM completo con gestione lead
-  - `/dashboard/calls` - Registro chiamate
+  - `/dashboard` - Home con statistiche reali (nessun dato fake)
+  - `/dashboard/onboarding` - Schermata per nuovi utenti senza abbonamento (spiega servizio, vantaggi, piani)
+  - `/dashboard/leads` - CRM completo con gestione lead (dati reali da Firestore)
+  - `/dashboard/calls` - Registro chiamate (dati reali)
   - `/dashboard/zones` - Mappatura zone → agenti
-  - `/dashboard/analytics` - Analytics e statistiche
+  - `/dashboard/analytics` - Analytics con dati reali calcolati dalle chiamate (API route dedicata)
   - `/dashboard/billing` - Gestione abbonamenti
   - `/dashboard/setup` - Setup iniziale ordine
+  - `/dashboard/checkout` - Pagina intermedia per redirect Stripe checkout
 - ✅ **Admin Panel** - sistema completo per gestione ordini e clienti
   - `/admin` - Dashboard admin
   - `/admin/clients` - Gestione clienti
   - `/admin/setup` - Setup ordini nuovi clienti
 - ✅ **API Routes complete** - tutte le routes implementate e testate
   - Auth: `/api/auth/signup`, `/api/auth/[...nextauth]`
-  - Dashboard: `/api/dashboard/leads`, `/api/dashboard/stats`, `/api/dashboard/zones`, `/api/dashboard/calls`
+  - Dashboard: 
+    - `/api/dashboard/leads` - GET, PATCH (dati reali da Firestore)
+    - `/api/dashboard/stats` - GET (statistiche reali filtrate per user_id)
+    - `/api/dashboard/zones` - GET, POST
+    - `/api/dashboard/calls` - GET (chiamate reali)
+    - `/api/dashboard/analytics` - GET (analytics calcolate da chiamate reali)
   - Orders: `/api/orders/current`, `/api/orders/[orderId]/test-call`, `/api/orders/[orderId]/confirm-forwarding`
   - Admin: `/api/admin/orders/*`, `/api/admin/users/*`
   - Billing: `/api/billing/create-checkout`, `/api/billing/webhook`, `/api/billing/check-trial`
@@ -61,8 +73,13 @@
 - ✅ **Vapi API fallback** - supporto per endpoint `/v1` e `/assistant`
 - ✅ **Password hash** - NextAuth usa `password_hash` correttamente
 - ✅ **Validazione input** - schemi Zod centralizzati in `lib/validation.ts`
+  - `signupSchema` - per frontend (include confirmPassword)
+  - `signupApiSchema` - per backend (solo name, email, password)
+  - `loginSchema`, `checkoutSchema`, `leadStatusSchema`, ecc.
 - ✅ **Routing intelligente zone** - sistema per assegnare lead agli agenti in base alla zona
 - ✅ **Guida call forwarding** - pagina completa con istruzioni per tutti i provider italiani
+- ✅ **Sistema onboarding** - utenti nuovi vedono schermata esplicativa invece di dashboard vuota
+- ✅ **Analytics real-time** - calcolo automatico di intent breakdown, top zones, property types, features, budget medio, conversion rate
 
 ### Deployment
 - ✅ **Cloud Function `vapi-webhook`** deployata su GCP
@@ -94,8 +111,9 @@
 
 ## ⚠️ In Corso / Da Fare
 
-### Deployment Vercel (URGENTE)
-- [ ] **Configurare Root Directory** nelle settings Vercel → `dashboard`
+### Deployment Vercel
+- ✅ **vercel.json creato** - configurazione nella root del progetto
+- ⚠️ **Configurare Root Directory** nelle settings Vercel → `dashboard` (URGENTE)
   - Vai su: https://vercel.com/lapadolus-projects/ai-centralinista/settings
   - General → Root Directory → imposta: `dashboard`
 - [ ] **Eliminare progetto duplicato** `fixer-dashboard` (se non serve più)
@@ -252,9 +270,17 @@ node scripts/generate-password-hash.js
 4. **Validazione nome** - Regex migliorata per supportare caratteri Unicode
 5. **Configurazione Vercel** - Creato `vercel.json` nella root con root directory
 
+### Problemi Risolti Recentemente
+- ✅ **Errore signup "expected string, received undefined"** - Risolto separando schemi Zod
+- ✅ **Dati fake in dashboard** - Rimossi tutti i dati hardcoded, ora tutto da Firestore
+- ✅ **Analytics con dati fake** - Creata API route che calcola analytics reali
+- ✅ **Utenti senza abbonamento vedevano dashboard vuota** - Aggiunta schermata onboarding
+- ✅ **Favicon mancante** - Configurato correttamente
+- ✅ **Errore TypeScript guida-call-forwarding** - Fixato
+
 ### Problemi Aperti
-- ⚠️ **Deploy Vercel fallisce** - Necessario configurare Root Directory = `dashboard` nelle settings
-- ⚠️ **Progetto duplicato** - `fixer-dashboard` da eliminare o scollegare
+- ⚠️ **Deploy Vercel fallisce** - Necessario configurare Root Directory = `dashboard` nelle settings Vercel
+- ⚠️ **Progetto duplicato** - `fixer-dashboard` da eliminare o scollegare dalla repo
 - ⚠️ **Numero Twilio italiano** - Manca numero italiano per produzione
 
 ---
@@ -266,14 +292,18 @@ node scripts/generate-password-hash.js
 ### Cosa funziona:
 - ✅ Sistema completo multi-tenant
 - ✅ Autenticazione e autorizzazione
-- ✅ Dashboard completa
-- ✅ API routes tutte implementate
+- ✅ Dashboard completa con dati reali (nessun dato fake)
+- ✅ Analytics con calcolo real-time da chiamate reali
+- ✅ Schermata onboarding per nuovi utenti
+- ✅ API routes tutte implementate e collegate a Firestore
 - ✅ Cloud Function deployata e funzionante
 - ✅ Sistema billing Stripe
 - ✅ Notifiche WhatsApp
+- ✅ Validazione input con Zod (schemi separati frontend/backend)
+- ✅ Sistema di routing zone → agenti
 
 ### Cosa manca:
-- ⚠️ Configurazione Root Directory Vercel (URGENTE)
+- ⚠️ Configurazione Root Directory Vercel (URGENTE - nelle settings)
 - ⚠️ Numero Twilio italiano
 - ⚠️ Test end-to-end completo
 - ⚠️ Configurazione Resend (opzionale)
