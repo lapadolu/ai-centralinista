@@ -8,48 +8,37 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        cyber: {
-          pink: '#ff00ff',
-          purple: '#9d4edd',
-          violet: '#c77dff',
-          dark: '#0a0a0a',
-          darker: '#050505',
-          gray: '#1a1a1a',
-          'gray-light': '#2a2a2a',
+        brick: {
+          dark: '#0f0d0d',
+          charcoal: '#1b1a1a',
+          stone: '#262626',
+          accent: '#b63a2b',
+          accentDark: '#8b1d2c',
+          accentLight: '#d76d5b',
+          sand: '#f2e8d5',
         },
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
-        display: ['Inter', 'system-ui', 'sans-serif'],
+        display: ['Playfair Display', 'Georgia', 'serif'],
       },
       animation: {
-        'glow-pulse': 'glow-pulse 2s ease-in-out infinite',
-        'fade-in': 'fade-in 0.6s ease-out',
-        'slide-up': 'slide-up 0.6s ease-out',
-        'float': 'float 3s ease-in-out infinite',
+        'fade-in': 'fade-in 0.5s ease-out both',
+        'slide-up': 'slide-up 0.6s ease-out both',
       },
       keyframes: {
-        'glow-pulse': {
-          '0%, 100%': { opacity: '1', filter: 'drop-shadow(0 0 10px rgba(199, 125, 255, 0.5))' },
-          '50%': { opacity: '0.8', filter: 'drop-shadow(0 0 20px rgba(199, 125, 255, 0.8))' },
-        },
         'fade-in': {
           '0%': { opacity: '0' },
           '100%': { opacity: '1' },
         },
         'slide-up': {
-          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '0%': { opacity: '0', transform: 'translateY(12px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
-        },
-        'float': {
-          '0%, 100%': { transform: 'translateY(0px)' },
-          '50%': { transform: 'translateY(-10px)' },
         },
       },
       boxShadow: {
-        'cyber': '0 0 20px rgba(199, 125, 255, 0.3)',
-        'cyber-lg': '0 0 40px rgba(199, 125, 255, 0.5)',
-        'cyber-pink': '0 0 20px rgba(255, 0, 255, 0.4)',
+        'brick': '0 20px 60px rgba(0,0,0,0.35)',
+        'brick-soft': '0 10px 30px rgba(0,0,0,0.2)',
       },
     },
   },

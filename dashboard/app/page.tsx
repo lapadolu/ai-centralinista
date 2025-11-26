@@ -1,108 +1,296 @@
 'use client';
 
 import Link from 'next/link';
-import { Phone, ArrowRight, CheckCircle2, Zap, Sparkles } from 'lucide-react';
+import { Phone, ArrowRight, CheckCircle2, Shield, BarChart3 } from 'lucide-react';
 import { SupportButton } from '@/components/SupportButton';
-import { useEffect, useRef } from 'react';
+
+const problems = [
+  'Perdi chiamate quando sei occupato',
+  'Clienti riattaccano se non rispondi',
+  'Segreteria costa €1500+ al mese',
+  'Orari limitati (no sera e weekend)',
+  'Dati clienti dispersi o persi',
+];
+
+const solutions = [
+  'AI risponde in 2 secondi, sempre disponibile',
+  'Voce naturale italiana, conversazione fluida',
+  'Raccoglie informazioni cliente automaticamente',
+  'WhatsApp istantaneo con tutti i dati',
+  'Dashboard analytics e CRM integrato',
+];
+
+const products = [
+  {
+    title: 'AI Centralinista',
+    description: 'Per agenzie immobiliari, studi professionali e piccole imprese',
+    price: '€109/mese',
+    features: [
+      '100 chiamate incluse',
+      'Notifiche WhatsApp',
+      'Dashboard CRM',
+      'Routing zone',
+    ],
+  },
+  {
+    title: 'AI Receptionist',
+    description: 'Per uffici, coworking e spazi condivisi',
+    price: '€149/mese',
+    featured: true,
+    features: [
+      'Prenotazioni sale',
+      'Informazioni visitatori',
+      'Integrazione accessi',
+      'Notifiche team',
+    ],
+  },
+  {
+    title: 'AI Customer Service',
+    description: 'Per e-commerce, retail e supporto clienti',
+    price: '€199/mese',
+    features: [
+      'Supporto 24/7',
+      'Tracking ordini',
+      'Risposte automatiche',
+      'Integrazione CRM',
+    ],
+  },
+];
+
+const steps = [
+  {
+    title: 'Setup in 5 minuti',
+    description: 'Colleghi il tuo numero, personalizzi l’AI e configuri le zone di interesse.',
+  },
+  {
+    title: 'AI risponde per te',
+    description: 'Voce naturale italiana, raccoglie tutte le informazioni importanti.',
+  },
+  {
+    title: 'Notifica WhatsApp',
+    description: 'Ricevi nome, telefono e richiesta. Richiami quando vuoi, con tutti i dati.',
+  },
+];
 
 export default function HomePage() {
-  const heroRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('animate-fade-in');
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    const elements = document.querySelectorAll('.scroll-reveal');
-    elements.forEach((el) => observer.observe(el));
-
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <div className="min-h-screen bg-cyber-dark relative overflow-hidden">
-      {/* Animated Background Pattern */}
-      <div className="fixed inset-0 grid-pattern opacity-30 pointer-events-none" />
-      <div className="fixed inset-0 bg-gradient-to-br from-cyber-dark via-cyber-darker to-cyber-dark pointer-events-none" />
-      
-      {/* Glow Effects */}
-      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-cyber-purple/20 rounded-full blur-3xl pointer-events-none animate-float" />
-      <div className="fixed bottom-0 right-0 w-[600px] h-[600px] bg-cyber-pink/10 rounded-full blur-3xl pointer-events-none animate-float" style={{ animationDelay: '1s' }} />
-
+    <div className="min-h-screen bg-brick-dark text-sand relative overflow-hidden">
+      <div className="absolute inset-0 opacity-30 brick-divider" />
       <SupportButton variant="floating" position="pre-purchase" />
-      
-      {/* Header - Cyberpunk */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-cyber-dark/80 backdrop-blur-md border-b border-cyber-purple/20">
-        <div className="max-w-7xl mx-auto px-8 lg:px-16">
+      <nav className="fixed top-0 left-0 right-0 z-40 bg-brick-dark/80 backdrop-blur-sm border-b border-white/5">
+        <div className="max-w-6xl mx-auto px-6 lg:px-10">
           <div className="flex justify-between items-center h-20">
-            <div className="text-2xl font-bold tracking-tight cyber-gradient-text glow-text">
+            <div className="text-2xl font-semibold tracking-tight brick-gradient-text">
               FIXER
             </div>
-            <div className="flex items-center gap-8">
-              <Link
-                href="/login"
-                className="text-sm text-gray-300 hover:text-white transition-all font-medium hover:glow-text"
-              >
+            <div className="flex items-center gap-6 text-sm font-medium">
+              <Link href="/login" className="text-sand/70 hover:text-sand transition-subtle">
                 Accedi
               </Link>
               <Link
                 href="/signup"
-                className="px-6 py-2.5 cyber-gradient text-white rounded-sm transition-all hover:shadow-cyber-pink font-semibold text-sm relative overflow-hidden group"
+                className="px-6 py-2 brick-gradient text-white rounded-full shadow-brick transition-subtle"
               >
-                <span className="relative z-10">Inizia</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-cyber-pink to-cyber-purple opacity-0 group-hover:opacity-100 transition-opacity" />
+                Inizia ora
               </Link>
             </div>
           </div>
         </div>
       </nav>
 
-      {/* Hero - Cyberpunk */}
-      <section className="relative pt-32 pb-24 px-8 lg:px-16 min-h-screen flex items-center">
-        <div className="max-w-6xl mx-auto w-full">
-          <div className="mb-16 scroll-reveal">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-cyber-gray border border-cyber-purple/30 rounded-full mb-8 text-xs font-medium tracking-widest uppercase text-cyber-purple glow-border">
-              <Sparkles className="w-3 h-3" />
-              Centralini Intelligenti
-            </div>
-            
-            <h1 className="text-6xl md:text-7xl lg:text-8xl font-black text-white mb-8 leading-[1.05] tracking-tight cyber-gradient-text glow-text">
-              Il tuo business<br />
-              <span className="text-white">non si ferma mai</span>
-            </h1>
-            
-            <p className="text-xl md:text-2xl text-gray-300 mb-12 leading-relaxed font-light max-w-3xl">
-              Assistenti AI che rispondono alle chiamate 24/7, raccolgono lead qualificati e li smistano automaticamente al tuo team.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link
-                href="/signup"
-                className="group inline-flex items-center gap-2 px-8 py-4 cyber-gradient text-white rounded-sm transition-all hover:shadow-cyber-lg font-semibold text-sm relative overflow-hidden"
-              >
-                <span className="relative z-10 flex items-center gap-2">
+      <main className="pt-32">
+        <section className="max-w-6xl mx-auto px-6 lg:px-10 pb-20 border-b border-white/5">
+          <div className="grid lg:grid-cols-12 gap-12 items-center">
+            <div className="lg:col-span-7">
+              <p className="text-sm uppercase tracking-[0.3em] text-sand/60 font-semibold mb-6">
+                Centralini Intelligenti per PMI
+              </p>
+              <h1 className="text-4xl md:text-6xl font-semibold text-white leading-tight brick-gradient-text mb-8">
+                Un centralino AI che lavora con la disciplina di un team senior.
+              </h1>
+              <p className="text-lg text-sand/80 leading-relaxed mb-10 max-w-2xl">
+                FIXER risponde alle chiamate 24/7, qualifica i lead e li smista
+                automaticamente al tuo team. Professionalità, controllo e reporting in un'unica piattaforma.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link
+                  href="/signup"
+                  className="inline-flex items-center justify-center gap-2 px-8 py-4 brick-gradient text-white rounded-full shadow-brick font-semibold transition-subtle"
+                >
                   Prova gratis 30 giorni
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-cyber-pink to-cyber-purple opacity-0 group-hover:opacity-100 transition-opacity" />
-              </Link>
-              <a
-                href="#come-funziona"
-                className="inline-flex items-center px-8 py-4 border border-cyber-purple/50 text-white font-medium text-sm transition-all hover:border-cyber-purple hover:glow-border rounded-sm bg-cyber-gray/50 backdrop-blur-sm"
-              >
-                Scopri come funziona
-              </a>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+                <Link
+                  href="#come-funziona"
+                  className="inline-flex items-center justify-center px-8 py-4 border border-white/10 rounded-full text-sand/80 hover:text-white hover:border-white/30 transition-subtle"
+                >
+                  Scopri come funziona
+                </Link>
+              </div>
+            </div>
+            <div className="lg:col-span-5 space-y-6">
+              <div className="brick-card brick-card-hover rounded-2xl p-6">
+                <h3 className="text-sm uppercase tracking-[0.3em] text-sand/60 mb-4">
+                  KPI PRINCIPALI
+                </h3>
+                <div className="grid grid-cols-3 gap-4">
+                  {[
+                    { label: 'Chiamate/giorno', value: '120+' },
+                    { label: 'Lead mensili', value: '450+' },
+                    { label: 'Tempo risposta', value: '2s' },
+                  ].map((kpi) => (
+                    <div key={kpi.label}>
+                      <div className="text-2xl font-semibold text-white">{kpi.value}</div>
+                      <div className="text-xs text-sand/60 mt-1">{kpi.label}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="brick-card rounded-2xl p-6">
+                <div className="flex items-center gap-3 mb-3">
+                  <Shield className="w-5 h-5 text-brick-accentLight" />
+                  <p className="text-sm uppercase tracking-[0.3em] text-sand/60 font-semibold">
+                    Integrità e controllo
+                  </p>
+                </div>
+                <p className="text-sand/80 leading-relaxed">
+                  Standard enterprise per sicurezza e conformità. Logging, auditing e governance
+                  progettati per PMI esigenti.
+                </p>
+              </div>
             </div>
           </div>
+        </section>
+
+        <section className="max-w-6xl mx-auto px-6 lg:px-10 py-20 border-b border-white/5">
+          <div className="grid md:grid-cols-2 gap-12">
+            <div className="space-y-6">
+              <h2 className="text-3xl font-semibold text-white brick-gradient-text">
+                Il problema
+              </h2>
+              <div className="space-y-4">
+                {problems.map((problem) => (
+                  <div key={problem} className="flex gap-4 brick-card rounded-xl p-4">
+                    <div className="w-2 h-2 rounded-full bg-brick-accent mt-2" />
+                    <p className="text-sand/80 leading-relaxed">{problem}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="space-y-6">
+              <h2 className="text-3xl font-semibold text-white brick-gradient-text">
+                La soluzione
+              </h2>
+              <div className="space-y-4">
+                {solutions.map((solution) => (
+                  <div key={solution} className="flex gap-4 brick-card rounded-xl p-4">
+                    <CheckCircle2 className="w-5 h-5 text-brick-accentLight mt-1" />
+                    <p className="text-sand/80 leading-relaxed">{solution}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="max-w-6xl mx-auto px-6 lg:px-10 py-20 border-b border-white/5" id="prodotti">
+          <div className="text-center mb-16">
+            <p className="text-sm uppercase tracking-[0.3em] text-sand/60 mb-3">Piani</p>
+            <h2 className="text-4xl font-semibold brick-gradient-text">
+              Scegli il centralino che cresce con la tua azienda
+            </h2>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            {products.map((product) => (
+              <div
+                key={product.title}
+                className={`rounded-2xl p-8 brick-card ${
+                  product.featured ? 'border border-brick-accentLight' : ''
+                }`}
+              >
+                <p className="text-sm uppercase tracking-[0.3em] text-sand/60 mb-3">
+                  {product.featured ? 'Più scelto' : 'Disponibile'}
+                </p>
+                <h3 className="text-2xl font-semibold text-white mb-4">{product.title}</h3>
+                <p className="text-sand/60 mb-6">{product.description}</p>
+                <div className="text-3xl font-semibold text-white mb-6">{product.price}</div>
+                <ul className="space-y-3 mb-8">
+                  {product.features.map((feature) => (
+                    <li key={feature} className="flex items-center gap-3 text-sand/70">
+                      <div className="w-1.5 h-1.5 rounded-full bg-brick-accentLight" />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href="/signup"
+                  className={`block text-center px-6 py-3 rounded-full font-semibold transition-subtle ${
+                    product.featured
+                      ? 'brick-gradient text-white'
+                      : 'border border-white/10 text-sand/80 hover:text-white hover:border-white/40'
+                  }`}
+                >
+                  Inizia ora
+                </Link>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="max-w-6xl mx-auto px-6 lg:px-10 py-20" id="come-funziona">
+          <div className="text-center mb-16">
+            <p className="text-sm uppercase tracking-[0.3em] text-sand/60 mb-3">Processo</p>
+            <h2 className="text-4xl font-semibold brick-gradient-text">Come funziona</h2>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            {steps.map((step, index) => (
+              <div key={step.title} className="brick-card rounded-2xl p-6 space-y-3">
+                <div className="text-sm uppercase tracking-[0.3em] text-sand/60">Step {index + 1}</div>
+                <h3 className="text-xl font-semibold text-white">{step.title}</h3>
+                <p className="text-sand/70 leading-relaxed">{step.description}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="max-w-6xl mx-auto px-6 lg:px-10 py-20 text-center">
+          <div className="brick-card rounded-3xl p-12 space-y-6">
+            <h2 className="text-4xl font-semibold brick-gradient-text">
+              Pronto a gestire ogni chiamata?
+            </h2>
+            <p className="text-lg text-sand/70 max-w-2xl mx-auto">
+              Setup professionale in 5 minuti, operatori virtuali formati sul tuo business, reporting in tempo reale.
+            </p>
+            <Link
+              href="/signup"
+              className="inline-flex items-center gap-2 px-10 py-4 brick-gradient text-white rounded-full font-semibold transition-subtle"
+            >
+              Inizia subito
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </div>
+        </section>
+      </main>
+
+      <footer className="border-t border-white/5">
+        <div className="max-w-6xl mx-auto px-6 lg:px-10 py-10 text-center text-sm text-sand/60">
+          <div className="flex justify-center gap-6 mb-4">
+            <Link href="/privacy" className="hover:text-sand transition-subtle">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="hover:text-sand transition-subtle">
+              Termini di Servizio
+            </Link>
+            <Link href="/cookie-policy" className="hover:text-sand transition-subtle">
+              Cookie Policy
+            </Link>
+          </div>
+          © 2025 Helping Hand. Tutti i diritti riservati.
         </div>
-      </section>
+      </footer>
+    </div>
+  );
+}
 
       {/* Problem/Solution - Cyberpunk Cards */}
       <section className="relative py-32 px-8 lg:px-16 border-t border-cyber-purple/20">

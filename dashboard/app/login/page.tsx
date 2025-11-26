@@ -38,56 +38,53 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-cyber-dark flex items-center justify-center p-8 relative overflow-hidden">
-      {/* Background Effects */}
-      <div className="fixed inset-0 grid-pattern opacity-20 pointer-events-none" />
-      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-cyber-purple/10 rounded-full blur-3xl pointer-events-none" />
-      
+    <div className="min-h-screen bg-brick-dark flex items-center justify-center p-8 relative overflow-hidden">
+      <div className="absolute inset-0 brick-divider opacity-40 pointer-events-none" />
       <div className="w-full max-w-md relative z-10">
         <div className="mb-12 text-center">
           <Link href="/" className="inline-block mb-8">
-            <h1 className="text-4xl font-black tracking-tight cyber-gradient-text glow-text">
+            <h1 className="text-4xl font-semibold tracking-tight brick-gradient-text">
               FIXER
             </h1>
           </Link>
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-cyber-gray/50 border border-cyber-purple/30 rounded-full text-cyber-purple text-xs font-medium tracking-widest uppercase">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full text-sand/70 text-xs font-semibold tracking-[0.3em]">
             <Sparkles className="w-3 h-3" />
             Accedi al tuo account
           </div>
         </div>
 
-        <div className="bg-cyber-gray/50 border border-cyber-purple/20 rounded-lg p-8 backdrop-blur-sm glow-border">
+        <div className="brick-card rounded-2xl p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-sm font-semibold text-white mb-2">
+              <label className="block text-sm font-semibold text-sand/80 mb-2">
                 Email
               </label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 bg-cyber-dark border border-cyber-purple/30 focus:border-cyber-purple focus:glow-border outline-none transition-all text-white placeholder-gray-500 rounded-sm"
+                className="w-full px-4 py-3 bg-brick-charcoal border border-white/10 focus:border-brick-accent focus:bg-black/20 outline-none transition-subtle text-sand rounded-md"
                 placeholder="email@esempio.it"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-white mb-2">
+              <label className="block text-sm font-semibold text-sand/80 mb-2">
                 Password
               </label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 bg-cyber-dark border border-cyber-purple/30 focus:border-cyber-purple focus:glow-border outline-none transition-all text-white placeholder-gray-500 rounded-sm"
+                className="w-full px-4 py-3 bg-brick-charcoal border border-white/10 focus:border-brick-accent focus:bg-black/20 outline-none transition-subtle text-sand rounded-md"
                 placeholder="••••••••"
                 required
               />
             </div>
 
             {error && (
-              <div className="bg-cyber-pink/10 border border-cyber-pink/30 text-cyber-pink px-4 py-3 text-sm rounded-sm glow-border">
+              <div className="bg-brick-accent/10 border border-brick-accent/40 text-brick-accent px-4 py-3 text-sm rounded-md">
                 {error}
               </div>
             )}
@@ -95,17 +92,16 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full cyber-gradient text-white font-bold py-3 px-4 transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-cyber-lg rounded-sm relative overflow-hidden group"
+              className="w-full brick-gradient text-white font-semibold py-3 px-4 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-subtle shadow-brick"
             >
               <span className="relative z-10">{loading ? 'Accesso in corso...' : 'Accedi'}</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-cyber-pink to-cyber-purple opacity-0 group-hover:opacity-100 transition-opacity" />
             </button>
           </form>
         </div>
 
-        <div className="mt-8 text-center text-sm text-gray-400">
+        <div className="mt-8 text-center text-sm text-sand/60">
           Prima volta?{' '}
-          <Link href="/signup" className="text-cyber-purple hover:text-cyber-pink font-semibold hover:glow-text transition-all">
+          <Link href="/signup" className="text-white font-semibold hover:text-brick-accentLight transition-subtle">
             Registrati
           </Link>
         </div>
