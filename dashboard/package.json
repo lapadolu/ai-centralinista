@@ -12,6 +12,8 @@
     "@sentry/nextjs": "^10.25.0",
     "@stripe/stripe-js": "^8.4.0",
     "@types/bcryptjs": "^2.4.6",
+    "@types/node": "24.9.1",
+    "@types/react": "19.2.2",
     "autoprefixer": "^10.4.22",
     "bcryptjs": "^3.0.3",
     "date-fns": "^4.1.0",
@@ -28,11 +30,7 @@
     "resend": "^4.0.0",
     "stripe": "^19.3.1",
     "tailwindcss": "^3.4.0",
+    "typescript": "5.9.3",
     "zod": "^4.1.12"
-  },
-  "devDependencies": {
-    "@types/node": "24.9.1",
-    "@types/react": "19.2.2",
-    "typescript": "5.9.3"
   }
 }
