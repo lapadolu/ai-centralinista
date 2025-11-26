@@ -17,8 +17,8 @@ export default function DashboardLayout({
 
   if (status === 'loading') {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="text-slate-600">Caricamento...</div>
+      <div className="min-h-screen bg-cyber-dark flex items-center justify-center">
+        <div className="text-cyber-purple animate-pulse">Caricamento...</div>
       </div>
     );
   }
@@ -43,14 +43,17 @@ export default function DashboardLayout({
   const isAdmin = (session.user as any)?.role === 'admin';
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Top Navigation - Minimal */}
-      <nav className="bg-white border-b border-slate-100 sticky top-0 z-50">
+    <div className="min-h-screen bg-cyber-dark relative">
+      {/* Background Effects */}
+      <div className="fixed inset-0 grid-pattern opacity-10 pointer-events-none" />
+      
+      {/* Top Navigation - Cyberpunk */}
+      <nav className="bg-cyber-dark/80 backdrop-blur-md border-b border-cyber-purple/20 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-8 lg:px-16">
           <div className="flex justify-between items-center h-20">
             <div className="flex items-center gap-12">
               <Link href="/dashboard">
-                <h1 className="text-xl font-semibold text-slate-900" style={{ fontFamily: 'Playfair Display, serif' }}>
+                <h1 className="text-xl font-black tracking-tight cyber-gradient-text glow-text">
                   FIXER
                 </h1>
               </Link>
@@ -63,10 +66,10 @@ export default function DashboardLayout({
                       <Link
                         key={item.href}
                         href={item.href}
-                        className={`flex items-center gap-2 px-4 py-2 text-sm font-medium transition-colors ${
+                        className={`flex items-center gap-2 px-4 py-2 text-sm font-semibold transition-all rounded-sm ${
                           pathname === item.href
-                            ? 'text-slate-900 border-b-2 border-slate-900'
-                            : 'text-slate-600 hover:text-slate-900'
+                            ? 'text-cyber-purple bg-cyber-purple/10 border-b-2 border-cyber-purple glow-text'
+                            : 'text-gray-400 hover:text-cyber-purple hover:bg-cyber-purple/5'
                         }`}
                       >
                         <Icon className="w-4 h-4" />
@@ -77,10 +80,10 @@ export default function DashboardLayout({
                   {isAdmin && (
                     <Link
                       href="/admin"
-                      className={`flex items-center gap-2 px-4 py-2 text-sm font-medium transition-colors ${
+                      className={`flex items-center gap-2 px-4 py-2 text-sm font-semibold transition-all rounded-sm ${
                         pathname.startsWith('/admin')
-                          ? 'text-slate-900 border-b-2 border-slate-900'
-                          : 'text-slate-600 hover:text-slate-900'
+                          ? 'text-cyber-purple bg-cyber-purple/10 border-b-2 border-cyber-purple glow-text'
+                          : 'text-gray-400 hover:text-cyber-purple hover:bg-cyber-purple/5'
                       }`}
                     >
                       Admin
@@ -91,12 +94,12 @@ export default function DashboardLayout({
             </div>
 
             <div className="flex items-center gap-6">
-              <div className="text-sm text-slate-600">
+              <div className="text-sm text-gray-400">
                 {session.user?.email}
               </div>
               <button
                 onClick={() => signOut({ callbackUrl: '/login' })}
-                className="text-sm text-slate-600 hover:text-slate-900 transition-colors"
+                className="text-sm text-gray-400 hover:text-cyber-purple transition-all hover:glow-text"
               >
                 Esci
               </button>
@@ -105,8 +108,8 @@ export default function DashboardLayout({
         </div>
       </nav>
 
-      {/* Main Content - More Spacious */}
-      <main className="max-w-7xl mx-auto px-8 lg:px-16 py-12">
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-8 lg:px-16 py-12 relative z-10">
         {children}
       </main>
       
@@ -114,4 +117,3 @@ export default function DashboardLayout({
     </div>
   );
 }
-

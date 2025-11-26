@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,7 +6,7 @@
 
 @layer base {
   * {
-    @apply transition-colors duration-200;
+    @apply transition-all duration-300;
   }
   
   body {
@@ -15,18 +15,54 @@
     letter-spacing: -0.01em;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background: #0a0a0a;
+    color: #ffffff;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Playfair Display', serif;
-    font-weight: 600;
-    letter-spacing: -0.02em;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.03em;
   }
 }
 
 @layer utilities {
   .transition-subtle {
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .glow-text {
+    text-shadow: 0 0 10px rgba(199, 125, 255, 0.5),
+                 0 0 20px rgba(199, 125, 255, 0.3),
+                 0 0 30px rgba(199, 125, 255, 0.2);
+  }
+  
+  .glow-border {
+    box-shadow: 0 0 10px rgba(199, 125, 255, 0.3),
+                inset 0 0 10px rgba(199, 125, 255, 0.1);
+  }
+  
+  .glow-border-hover:hover {
+    box-shadow: 0 0 20px rgba(199, 125, 255, 0.6),
+                inset 0 0 20px rgba(199, 125, 255, 0.2);
+  }
+  
+  .cyber-gradient {
+    background: linear-gradient(135deg, #ff00ff 0%, #9d4edd 50%, #c77dff 100%);
+  }
+  
+  .cyber-gradient-text {
+    background: linear-gradient(135deg, #ff00ff 0%, #9d4edd 50%, #c77dff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .grid-pattern {
+    background-image: 
+      linear-gradient(rgba(199, 125, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(199, 125, 255, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
   }
 }
 

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { Phone, FileText, MapPin, BarChart3, ArrowRight, Zap } from 'lucide-react';
 
 interface Stats {
   today: number;
@@ -32,14 +33,11 @@ export default function DashboardHome() {
 
   const checkOrderAndLoadData = async () => {
     try {
-      // Carica i dati della dashboard
       await loadData();
       
-      // Controlla se ha un ordine
       const orderResponse = await fetch('/api/orders/current');
       const orderData = await orderResponse.json();
       
-      // Controlla anche subscription status (per utenti come Federico con abbonamento)
       const trialResponse = await fetch('/api/billing/check-trial');
       const trialData = trialResponse.ok ? await trialResponse.json() : null;
       
@@ -49,8 +47,6 @@ export default function DashboardHome() {
         (trialData.is_trial && !trialData.is_expired)
       );
       
-      // Se ha ordine O subscription attiva O chiamate, mostra dashboard normale
-      // Se non ha né ordine né subscription né chiamate, mostra banner onboarding
       if (hasActiveOrder || hasActiveSubscription || stats.month > 0 || recentCalls.length > 0) {
         setHasOrder(true);
       } else {
@@ -58,7 +54,6 @@ export default function DashboardHome() {
       }
     } catch (error) {
       console.error('Error checking order:', error);
-      // In caso di errore, mostra comunque la dashboard (fail-safe)
       setHasOrder(true);
     } finally {
       setCheckingOrder(false);
@@ -75,201 +70,185 @@ export default function DashboardHome() {
       setRecentCalls(data.recentCalls || []);
     } catch (error) {
       console.error('Error loading stats:', error);
-      setStats({
-        today: 0,
-        week: 0,
-        month: 0,
-        todayLeads: 0
-      });
+      setStats({ today: 0, week: 0, month: 0, todayLeads: 0 });
       setRecentCalls([]);
     }
   };
 
   if (checkingOrder || loading) {
-    return <div className="text-center py-12">Caricamento...</div>;
+    return (
+      <div className="text-center py-12">
+        <div className="text-cyber-purple animate-pulse">Caricamento...</div>
+      </div>
+    );
   }
 
-  // Se non ha ordine né chiamate, mostra banner per attivare servizio
   if (!hasOrder) {
     return (
       <div className="space-y-6">
-        <div className="bg-gradient-to-r from-red-700 to-red-950 rounded-xl p-8 text-white text-center">
-          <h2 className="text-2xl font-bold mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
+        <div className="bg-cyber-gray/50 border-2 border-cyber-purple rounded-lg p-8 text-center glow-border-lg backdrop-blur-sm">
+          <h2 className="text-3xl font-bold text-white mb-4 cyber-gradient-text glow-text">
             Attiva il tuo Centralino AI
           </h2>
-          <p className="text-red-100 mb-6 max-w-2xl mx-auto">
+          <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
             Scegli un piano per iniziare a ricevere chiamate e gestire i tuoi lead automaticamente.
           </p>
           <Link
             href="/dashboard/onboarding"
-            className="inline-flex items-center gap-2 bg-white text-red-900 px-8 py-4 rounded-lg font-semibold hover:bg-red-50 transition"
+            className="inline-flex items-center gap-2 cyber-gradient text-white px-8 py-4 rounded-sm font-bold transition-all hover:shadow-cyber-lg"
           >
             Vedi Piani Disponibili
+            <ArrowRight className="w-5 h-5" />
           </Link>
-        </div>
-        
-        {/* Mostra comunque la dashboard vuota per vedere la struttura */}
-        <div className="space-y-6 opacity-50">
-          <div>
-            <h1 className="text-3xl font-bold text-slate-900">
-              Benvenuto, {session?.user?.name || 'Agente'}
-            </h1>
-            <p className="text-slate-600 mt-1">
-              Dashboard chiamate AI Centralinista
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="text-sm font-medium text-slate-600">Oggi</div>
-              <div className="text-3xl font-bold text-slate-900 mt-2">0</div>
-              <div className="text-sm text-slate-500 mt-1">0 lead validi</div>
-            </div>
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="text-sm font-medium text-slate-600">Settimana</div>
-              <div className="text-3xl font-bold text-slate-900 mt-2">0</div>
-              <div className="text-sm text-slate-500 mt-1">chiamate</div>
-            </div>
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="text-sm font-medium text-slate-600">Mese</div>
-              <div className="text-3xl font-bold text-slate-900 mt-2">0</div>
-              <div className="text-sm text-slate-500 mt-1">chiamate</div>
-            </div>
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="text-sm font-medium text-slate-600">Lead Totali</div>
-              <div className="text-3xl font-bold text-slate-900 mt-2">0</div>
-              <div className="text-sm text-slate-500 mt-1">questo mese</div>
-            </div>
-          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Welcome */}
-      <div>
-        <h1 className="text-3xl font-bold text-slate-900">
+      <div className="scroll-reveal">
+        <h1 className="text-4xl font-black text-white mb-2 cyber-gradient-text glow-text">
           Benvenuto, {session?.user?.name || 'Agente'}
         </h1>
-        <p className="text-slate-600 mt-1">
+        <p className="text-gray-400 text-lg">
           Dashboard chiamate AI Centralinista
         </p>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-lg shadow p-6">
-          <div className="text-sm font-medium text-slate-600">Oggi</div>
-          <div className="text-3xl font-bold text-slate-900 mt-2">{stats.today}</div>
-          <div className="text-sm text-slate-500 mt-1">{stats.todayLeads} lead validi</div>
+      {/* Stats Cards - Cyberpunk */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="bg-cyber-gray/50 border border-cyber-purple/20 rounded-lg p-6 backdrop-blur-sm glow-border-hover scroll-reveal">
+          <div className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">Oggi</div>
+          <div className="text-4xl font-black text-white mb-1 cyber-gradient-text">{stats.today}</div>
+          <div className="text-sm text-gray-500">{stats.todayLeads} lead validi</div>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
-          <div className="text-sm font-medium text-slate-600">Settimana</div>
-          <div className="text-3xl font-bold text-slate-900 mt-2">{stats.week}</div>
-          <div className="text-sm text-slate-500 mt-1">chiamate</div>
+        <div className="bg-cyber-gray/50 border border-cyber-purple/20 rounded-lg p-6 backdrop-blur-sm glow-border-hover scroll-reveal">
+          <div className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">Settimana</div>
+          <div className="text-4xl font-black text-white mb-1">{stats.week}</div>
+          <div className="text-sm text-gray-500">chiamate</div>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
-          <div className="text-sm font-medium text-slate-600">Mese</div>
-          <div className="text-3xl font-bold text-slate-900 mt-2">{stats.month}</div>
-          <div className="text-sm text-slate-500 mt-1">chiamate</div>
+        <div className="bg-cyber-gray/50 border border-cyber-purple/20 rounded-lg p-6 backdrop-blur-sm glow-border-hover scroll-reveal">
+          <div className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">Mese</div>
+          <div className="text-4xl font-black text-white mb-1">{stats.month}</div>
+          <div className="text-sm text-gray-500">chiamate</div>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
-          <div className="text-sm font-medium text-slate-600">Lead Totali</div>
-          <div className="text-3xl font-bold text-slate-900 mt-2">{stats.month}</div>
-          <div className="text-sm text-slate-500 mt-1">questo mese</div>
+        <div className="bg-cyber-gray/50 border border-cyber-purple/20 rounded-lg p-6 backdrop-blur-sm glow-border-hover scroll-reveal">
+          <div className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">Lead Totali</div>
+          <div className="text-4xl font-black text-white mb-1">{stats.month}</div>
+          <div className="text-sm text-gray-500">questo mese</div>
         </div>
       </div>
 
-      {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {/* Quick Actions - Cyberpunk */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Link
           href="/dashboard/leads"
-          className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg p-6 transition group"
+          className="group bg-cyber-gray/50 border border-cyber-purple/30 rounded-lg p-6 backdrop-blur-sm glow-border-hover transition-all hover:border-cyber-purple scroll-reveal"
         >
-          <div className="text-lg font-semibold">Gestisci Lead</div>
-          <div className="text-blue-100 mt-1 text-sm">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-10 h-10 rounded-lg bg-cyber-purple/20 flex items-center justify-center border border-cyber-purple/30">
+              <FileText className="w-5 h-5 text-cyber-purple" />
+            </div>
+            <div className="text-lg font-bold text-white">Gestisci Lead</div>
+          </div>
+          <div className="text-gray-400 text-sm">
             CRM completo con pipeline
           </div>
         </Link>
 
         <Link
           href="/dashboard/zones"
-          className="bg-green-600 hover:bg-green-700 text-white rounded-lg p-6 transition group"
+          className="group bg-cyber-gray/50 border border-cyber-purple/30 rounded-lg p-6 backdrop-blur-sm glow-border-hover transition-all hover:border-cyber-purple scroll-reveal"
         >
-          <div className="text-lg font-semibold">Mappa Zone</div>
-          <div className="text-green-100 mt-1 text-sm">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-10 h-10 rounded-lg bg-cyber-purple/20 flex items-center justify-center border border-cyber-purple/30">
+              <MapPin className="w-5 h-5 text-cyber-purple" />
+            </div>
+            <div className="text-lg font-bold text-white">Mappa Zone</div>
+          </div>
+          <div className="text-gray-400 text-sm">
             Assegna zone ai tuoi agenti
           </div>
         </Link>
 
         <Link
           href="/dashboard/analytics"
-          className="bg-purple-600 hover:bg-purple-700 text-white rounded-lg p-6 transition group"
+          className="group bg-cyber-gray/50 border border-cyber-purple/30 rounded-lg p-6 backdrop-blur-sm glow-border-hover transition-all hover:border-cyber-purple scroll-reveal"
         >
-          <div className="text-lg font-semibold">Analytics</div>
-          <div className="text-purple-100 mt-1 text-sm">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-10 h-10 rounded-lg bg-cyber-purple/20 flex items-center justify-center border border-cyber-purple/30">
+              <BarChart3 className="w-5 h-5 text-cyber-purple" />
+            </div>
+            <div className="text-lg font-bold text-white">Analytics</div>
+          </div>
+          <div className="text-gray-400 text-sm">
             Insights e statistiche
           </div>
         </Link>
       </div>
 
       {/* Additional Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Link
           href="/dashboard/calls"
-          className="bg-slate-600 hover:bg-slate-700 text-white rounded-lg p-6 transition group"
+          className="group bg-cyber-gray/50 border border-cyber-purple/30 rounded-lg p-6 backdrop-blur-sm glow-border-hover transition-all hover:border-cyber-purple scroll-reveal"
         >
-          <div className="text-lg font-semibold">Registro Chiamate</div>
-          <div className="text-slate-100 mt-1 text-sm">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-10 h-10 rounded-lg bg-cyber-purple/20 flex items-center justify-center border border-cyber-purple/30">
+              <Phone className="w-5 h-5 text-cyber-purple" />
+            </div>
+            <div className="text-lg font-bold text-white">Registro Chiamate</div>
+          </div>
+          <div className="text-gray-400 text-sm">
             Visualizza tutte le chiamate ricevute
           </div>
         </Link>
       </div>
 
-      {/* Recent Calls */}
-      <div className="bg-white rounded-lg shadow">
-        <div className="p-6 border-b border-slate-200">
+      {/* Recent Calls - Cyberpunk */}
+      <div className="bg-cyber-gray/50 border border-cyber-purple/20 rounded-lg backdrop-blur-sm glow-border scroll-reveal">
+        <div className="p-6 border-b border-cyber-purple/20">
           <div className="flex justify-between items-center">
-            <h2 className="text-lg font-semibold text-slate-900">
+            <h2 className="text-xl font-bold text-white">
               Ultime Chiamate
             </h2>
             <Link
               href="/dashboard/leads"
-              className="text-sm text-blue-600 hover:text-blue-700"
+              className="text-sm text-cyber-purple hover:text-cyber-pink font-semibold hover:glow-text transition-all"
             >
               Vedi tutte →
             </Link>
           </div>
         </div>
 
-        <div className="divide-y divide-slate-100">
+        <div className="divide-y divide-cyber-purple/10">
           {recentCalls.length > 0 ? (
             recentCalls.map((call) => (
-              <div key={call.id} className="p-6 hover:bg-slate-50 transition">
+              <div key={call.id} className="p-6 hover:bg-cyber-purple/5 transition-all">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <h3 className="font-semibold text-slate-900">{call.nome || 'Cliente'}</h3>
-                      <span className="text-xs text-slate-500">{call.timestamp || 'Data non disponibile'}</span>
+                      <h3 className="font-bold text-white">{call.nome || 'Cliente'}</h3>
+                      <span className="text-xs text-gray-500">{call.timestamp || 'Data non disponibile'}</span>
                     </div>
                     
-                    <div className="text-sm text-slate-600 mb-2">
+                    <div className="text-sm text-gray-400 mb-2">
                       {call.zona || 'Zona non specificata'}
                     </div>
                     
-                    <div className="text-sm text-slate-900">
+                    <div className="text-sm text-gray-300 font-medium">
                       {call.telefono || 'Telefono non disponibile'}
                     </div>
                   </div>
 
                   <Link
                     href="/dashboard/leads"
-                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition"
+                    className="px-4 py-2 bg-cyber-purple/20 border border-cyber-purple/50 text-cyber-purple text-sm rounded-sm transition-all hover:bg-cyber-purple/30 hover:glow-border font-semibold"
                   >
                     Dettagli
                   </Link>
@@ -277,9 +256,9 @@ export default function DashboardHome() {
               </div>
             ))
           ) : (
-            <div className="p-12 text-center text-slate-500">
+            <div className="p-12 text-center text-gray-500">
               <p className="mb-4">Nessuna chiamata ancora</p>
-              <p className="text-sm">Le chiamate ricevute appariranno qui automaticamente</p>
+              <p className="text-sm text-gray-600">Le chiamate ricevute appariranno qui automaticamente</p>
             </div>
           )}
         </div>
@@ -287,4 +266,3 @@ export default function DashboardHome() {
     </div>
   );
 }
-
