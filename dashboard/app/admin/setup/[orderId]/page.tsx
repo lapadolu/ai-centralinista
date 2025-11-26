@@ -530,32 +530,102 @@ Struttura la conversazione per essere efficiente e raccogliere tutte le informaz
             <div className="text-sm text-green-600 mt-2">SID: {order.twilio_sid}</div>
           </div>
         ) : (
-          <div>
-            <p className="text-slate-600 mb-4">
-              Acquista un numero Twilio per questo cliente. Il numero verrà collegato all'agent Vapi.
-            </p>
-            <button
-              onClick={handlePurchaseTwilioNumber}
-              disabled={saving || !order.vapi_assistant_id}
-              className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-3 px-6 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-            >
-              {saving ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  Acquisto in corso...
-                </>
-              ) : (
-                <>
-                  <Phone className="w-4 h-4" />
-                  Acquista Numero Twilio
-                </>
-              )}
-            </button>
-            {!order.vapi_assistant_id && (
-              <p className="text-sm text-red-600 mt-2">
-                Crea prima l'agent Vapi per acquistare il numero
+          <div className="space-y-4">
+            <div>
+              <p className="text-slate-600 mb-4">
+                Acquista un numero Twilio per questo cliente. Il numero verrà collegato all'agent Vapi.
               </p>
-            )}
+              <button
+                onClick={handlePurchaseTwilioNumber}
+                disabled={saving || !order.vapi_assistant_id}
+                className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-3 px-6 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              >
+                {saving ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    Acquisto in corso...
+                  </>
+                ) : (
+                  <>
+                    <Phone className="w-4 h-4" />
+                    Acquista Numero Twilio (€25)
+                  </>
+                )}
+              </button>
+              {!order.vapi_assistant_id && (
+                <p className="text-sm text-red-600 mt-2">
+                  Crea prima l'agent Vapi per acquistare il numero
+                </p>
+              )}
+            </div>
+
+            {/* Aggiungi numero manualmente */}
+            <div className="pt-4 border-t border-slate-200">
+              <p className="text-sm font-medium text-slate-700 mb-3">
+                Hai già un numero Twilio? Aggiungilo manualmente:
+              </p>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  placeholder="+39 XXX XXX XXXX"
+                  id="manual-phone-input"
+                  className="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none"
+                />
+                <input
+                  type="text"
+                  placeholder="SID (opzionale)"
+                  id="manual-phone-sid"
+                  className="w-48 px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none"
+                />
+                <button
+                  onClick={async () => {
+                    const phoneInput = document.getElementById('manual-phone-input') as HTMLInputElement;
+                    const sidInput = document.getElementById('manual-phone-sid') as HTMLInputElement;
+                    const phoneNumber = phoneInput.value.trim();
+                    
+                    if (!phoneNumber) {
+                      alert('Inserisci un numero');
+                      return;
+                    }
+                    
+                    setSaving(true);
+                    try {
+                      const response = await fetch(`/api/admin/orders/${orderId}/set-twilio-number`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                          phone_number: phoneNumber,
+                          sid: sidInput.value.trim() || undefined
+                        }),
+                      });
+                      
+                      const data = await response.json();
+                      if (response.ok) {
+                        alert('Numero aggiunto con successo!');
+                        phoneInput.value = '';
+                        sidInput.value = '';
+                        loadOrder();
+                      } else {
+                        alert(`Errore: ${data.error}`);
+                      }
+                    } catch (error: any) {
+                      alert(`Errore: ${error.message}`);
+                    } finally {
+                      setSaving(false);
+                    }
+                  }}
+                  disabled={saving || !order.vapi_assistant_id}
+                  className="bg-slate-700 hover:bg-slate-800 text-white font-semibold py-2 px-6 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {saving ? 'Salvataggio...' : 'Aggiungi Manualmente'}
+                </button>
+              </div>
+              {!order.vapi_assistant_id && (
+                <p className="text-xs text-slate-500 mt-2">
+                  Crea prima l'agent Vapi per collegare il numero
+                </p>
+              )}
+            </div>
           </div>
         )}
       </div>

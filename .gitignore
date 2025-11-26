@@ -54,3 +54,4 @@ coverage/
 # Credentials
 credentials.txt
 service-account.json
+.vercel

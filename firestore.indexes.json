@@ -71,16 +71,6 @@
       ]
     },
     {
-      "collectionGroup": "users",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "stripe_customer_id",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
       "collectionGroup": "pending_checkouts",
       "queryScope": "COLLECTION",
       "fields": [

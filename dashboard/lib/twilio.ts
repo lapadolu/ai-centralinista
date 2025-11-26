@@ -163,14 +163,23 @@ export async function getTwilioNumber(phoneNumberSid: string) {
 
 /**
  * Acquista automaticamente un numero italiano disponibile
+ * Ritorna formato { success, phoneNumber, sid, error }
  */
-export async function purchaseAvailableItalianNumber() {
+export async function purchaseAvailableItalianNumber(): Promise<{
+  success: boolean;
+  phoneNumber?: string;
+  sid?: string;
+  error?: string;
+}> {
   try {
     // Cerca numeri disponibili
     const availableNumbers = await searchAvailableItalianNumbers();
     
     if (availableNumbers.length === 0) {
-      throw new Error('Nessun numero italiano disponibile');
+      return {
+        success: false,
+        error: 'Nessun numero italiano disponibile',
+      };
     }
 
     // Prendi il primo disponibile
@@ -179,10 +188,17 @@ export async function purchaseAvailableItalianNumber() {
     // Acquista
     const purchased = await purchaseTwilioNumber(selectedNumber.phone_number);
     
-    return purchased;
+    return {
+      success: true,
+      phoneNumber: purchased.phoneNumber,
+      sid: purchased.sid,
+    };
   } catch (error: any) {
     console.error('Error purchasing available Italian number:', error);
-    throw error;
+    return {
+      success: false,
+      error: error.message || 'Errore durante l\'acquisto del numero',
+    };
   }
 }
 

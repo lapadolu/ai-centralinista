@@ -36,9 +36,9 @@ export default function PrivacyPage() {
                 1. Titolare del Trattamento
               </h2>
               <p>
-                FIXER by Helping Hand ("noi", "nostro") è il titolare del trattamento dei dati personali raccolti attraverso
-                questa piattaforma. Per qualsiasi richiesta relativa alla privacy, contattaci all'indirizzo:
-                privacy@helping-hand.it
+                FIXER by Helping Hand, titolare Ludovico Marioli, P.IVA 14405660961, con sede in Via Alfonso Lamarmora 40, 
+                20122 Milano (MI), Italia, è il titolare del trattamento dei dati personali raccolti attraverso questa piattaforma. 
+                Per qualsiasi richiesta relativa alla privacy, contattaci all'indirizzo: privacy@helping-hand.it
               </p>
             </section>
 
@@ -117,8 +117,12 @@ export default function PrivacyPage() {
                 <li><strong>Revoca consenso:</strong> Revocare consenso in qualsiasi momento</li>
               </ul>
               <p className="mt-4">
-                Per esercitare questi diritti, contattaci all'indirizzo: privacy@helping-hand.it
+                Per esercitare questi diritti, puoi:
               </p>
+              <ul className="list-disc pl-6 space-y-2 mt-2">
+                <li>Utilizzare la <Link href="/gdpr-rights" className="text-slate-900 underline">pagina dedicata</Link> per inviare una richiesta</li>
+                <li>Contattarci all'indirizzo: privacy@helping-hand.it</li>
+              </ul>
             </section>
 
             <section>
@@ -162,8 +166,18 @@ export default function PrivacyPage() {
               </p>
               <ul className="list-none pl-0 space-y-2 mt-4">
                 <li><strong>Email:</strong> privacy@helping-hand.it</li>
-                <li><strong>Indirizzo:</strong> [Da completare con indirizzo legale]</li>
+                <li><strong>Titolare del Trattamento:</strong> Ludovico Marioli</li>
+                <li><strong>Ragione Sociale:</strong> Ditta Individuale</li>
+                <li><strong>P.IVA:</strong> 14405660961</li>
+                <li><strong>Codice Fiscale:</strong> MRLLVC00L27F205F</li>
+                <li><strong>Indirizzo:</strong> Via Alfonso Lamarmora 40, 20122 Milano (MI), Italia</li>
+                <li><strong>Responsabile Protezione Dati (DPO):</strong> privacy@helping-hand.it</li>
               </ul>
+              <p className="mt-4 text-sm text-slate-600">
+                Hai anche diritto di presentare un reclamo all'Autorità Garante per la Protezione dei Dati Personali
+                (<a href="https://www.garanteprivacy.it" target="_blank" rel="noopener noreferrer" className="text-slate-900 underline">www.garanteprivacy.it</a>)
+                se ritieni che il trattamento dei tuoi dati violi il GDPR.
+              </p>
             </section>
           </div>
 

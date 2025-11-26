@@ -39,12 +39,19 @@ export default function DashboardHome() {
       const orderResponse = await fetch('/api/orders/current');
       const orderData = await orderResponse.json();
       
-      const hasActiveOrder = orderResponse.ok && orderData.order;
+      // Controlla anche subscription status (per utenti come Federico con abbonamento)
+      const trialResponse = await fetch('/api/billing/check-trial');
+      const trialData = trialResponse.ok ? await trialResponse.json() : null;
       
-      // Se ha ordine, mostra dashboard normale
-      // Se non ha ordine ma ha chiamate, significa che il servizio è attivo (mostra dashboard)
-      // Se non ha né ordine né chiamate, mostra banner onboarding
-      if (hasActiveOrder || stats.month > 0 || recentCalls.length > 0) {
+      const hasActiveOrder = orderResponse.ok && orderData.order;
+      const hasActiveSubscription = trialData && (
+        trialData.subscription_status === 'active' || 
+        (trialData.is_trial && !trialData.is_expired)
+      );
+      
+      // Se ha ordine O subscription attiva O chiamate, mostra dashboard normale
+      // Se non ha né ordine né subscription né chiamate, mostra banner onboarding
+      if (hasActiveOrder || hasActiveSubscription || stats.month > 0 || recentCalls.length > 0) {
         setHasOrder(true);
       } else {
         setHasOrder(false);

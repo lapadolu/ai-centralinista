@@ -153,7 +153,12 @@ export default function TermsPage() {
               </p>
               <ul className="list-none pl-0 space-y-2 mt-4">
                 <li><strong>Email:</strong> support@helping-hand.it</li>
-                <li><strong>Indirizzo:</strong> [Da completare con indirizzo legale]</li>
+                <li><strong>Titolare:</strong> Ludovico Marioli</li>
+                <li><strong>Ragione Sociale:</strong> Ditta Individuale</li>
+                <li><strong>P.IVA:</strong> 14405660961</li>
+                <li><strong>Codice Fiscale:</strong> MRLLVC00L27F205F</li>
+                <li><strong>Indirizzo:</strong> Via Alfonso Lamarmora 40, 20122 Milano (MI), Italia</li>
+                <li><strong>Numero SDI (Fatturazione Elettronica):</strong> T9K4ZHO</li>
               </ul>
             </section>
           </div>

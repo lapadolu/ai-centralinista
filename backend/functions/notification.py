@@ -122,8 +122,8 @@ def send_whatsapp_notification(client_info, caller_number, transcript='', call_i
     
     # Build intelligent summary message
     
-    # Header
-    message_parts = [f"🔔 *Nuovo Lead - {nome}*", ""]
+    # Header (include urgency symbol)
+    message_parts = [f"{urgency_symbol} *Nuovo Lead - {nome}*", ""]
     
     # Create intelligent search summary
     search_summary = []

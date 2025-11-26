@@ -175,6 +175,7 @@ export interface Order {
   
   // Customer Preferences (scelti dal cliente)
   response_mode: 'immediate' | 'missed_call_only'; // ✅ Scelto dal cliente
+  voice_id?: string; // Voice selection (opzionale, default: male_professional)
   default_structured_output?: {
     fields: StructuredOutputField[];
     example?: string;

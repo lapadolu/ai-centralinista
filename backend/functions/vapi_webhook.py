@@ -11,6 +11,7 @@ PROTEZIONI ANTI-BOT:
 import os
 import functions_framework
 from google.cloud import firestore
+from google.cloud.firestore import Timestamp
 from notification import send_whatsapp_notification
 import logging
 import json
@@ -87,10 +88,11 @@ def check_rate_limit(customer_number):
     try:
         # Conta chiamate ultimo ora
         one_hour_ago = datetime.now() - timedelta(hours=1)
+        one_hour_ago_timestamp = Timestamp.from_datetime(one_hour_ago)
         
         recent_calls = db.collection('calls')\
             .where('customer_number', '==', customer_number)\
-            .where('started_at', '>=', one_hour_ago)\
+            .where('started_at', '>=', one_hour_ago_timestamp)\
             .stream()
         
         calls_last_hour = len(list(recent_calls))
@@ -101,10 +103,11 @@ def check_rate_limit(customer_number):
         
         # Conta chiamate ultimo giorno
         one_day_ago = datetime.now() - timedelta(days=1)
+        one_day_ago_timestamp = Timestamp.from_datetime(one_day_ago)
         
         daily_calls = db.collection('calls')\
             .where('customer_number', '==', customer_number)\
-            .where('started_at', '>=', one_day_ago)\
+            .where('started_at', '>=', one_day_ago_timestamp)\
             .stream()
         
         calls_last_day = len(list(daily_calls))
@@ -270,9 +273,10 @@ def check_cost_alerts():
         # Conta chiamate mese corrente
         now = datetime.now()
         month_start = datetime(now.year, now.month, 1)
+        month_start_timestamp = Timestamp.from_datetime(month_start)
         
         monthly_calls = db.collection('calls')\
-            .where('started_at', '>=', month_start)\
+            .where('started_at', '>=', month_start_timestamp)\
             .stream()
         
         total_calls = 0

@@ -38,9 +38,11 @@ export default function AdminDashboard() {
             <div className="flex items-center gap-6">
               <h1 className="text-xl font-semibold text-slate-900" style={{ fontFamily: 'Playfair Display, serif' }}>FIXER Admin</h1>
               <div className="flex gap-4 text-sm">
-                <Link href="/admin" className="text-red-600 font-medium">Dashboard</Link>
+                <Link href="/admin" className="text-slate-900 font-medium border-b-2 border-slate-900">Dashboard</Link>
                 <Link href="/admin/setup" className="text-slate-600 hover:text-slate-900">Setup Ordini</Link>
                 <Link href="/admin/clients" className="text-slate-600 hover:text-slate-900">Clienti</Link>
+                <Link href="/admin/api-costs" className="text-slate-600 hover:text-slate-900">Costi API</Link>
+                <Link href="/admin/system" className="text-slate-600 hover:text-slate-900">System Health</Link>
                 <Link href="/admin/analytics" className="text-slate-600 hover:text-slate-900">Analytics</Link>
               </div>
             </div>
@@ -171,36 +173,46 @@ export default function AdminDashboard() {
         </div>
 
         {/* Quick Actions */}
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-white rounded-lg shadow p-6">
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Link href="/admin/api-costs" className="border border-slate-200 p-6 hover:border-slate-900 transition-colors">
+            <h3 className="font-semibold text-slate-900 mb-2">Costi API</h3>
+            <p className="text-sm text-slate-600 mb-4">
+              Monitora utilizzo e costi dei servizi esterni
+            </p>
+            <div className="text-sm text-slate-900 font-medium">
+              Vedi dettagli →
+            </div>
+          </Link>
+
+          <Link href="/admin/system" className="border border-slate-200 p-6 hover:border-slate-900 transition-colors">
+            <h3 className="font-semibold text-slate-900 mb-2">System Health</h3>
+            <p className="text-sm text-slate-600 mb-4">
+              Stato dei servizi e infrastruttura
+            </p>
+            <div className="text-sm text-slate-900 font-medium">
+              Verifica stato →
+            </div>
+          </Link>
+
+          <Link href="/admin/analytics" className="border border-slate-200 p-6 hover:border-slate-900 transition-colors">
             <h3 className="font-semibold text-slate-900 mb-2">Performance Clienti</h3>
             <p className="text-sm text-slate-600 mb-4">
               Vedi quali clienti convertono meglio
             </p>
-            <Link href="/admin/analytics" className="text-sm text-red-600 hover:text-red-700 font-medium">
+            <div className="text-sm text-slate-900 font-medium">
               Vedi Report →
-            </Link>
-          </div>
+            </div>
+          </Link>
 
-          <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="font-semibold text-slate-900 mb-2">Revenue Mensile</h3>
+          <Link href="/admin/clients" className="border border-slate-200 p-6 hover:border-slate-900 transition-colors">
+            <h3 className="font-semibold text-slate-900 mb-2">Gestione Clienti</h3>
             <p className="text-sm text-slate-600 mb-4">
-              €{globalStats.totalRevenue}/mese ricorrente
+              Visualizza e gestisci tutti i clienti
             </p>
-            <Link href="/admin/billing" className="text-sm text-red-600 hover:text-red-700 font-medium">
-              Dettagli Fatturazione →
-            </Link>
-          </div>
-
-          <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="font-semibold text-slate-900 mb-2">Trial in Scadenza</h3>
-            <p className="text-sm text-slate-600 mb-4">
-              1 cliente da convertire
-            </p>
-            <Link href="/admin/clients" className="text-sm text-red-600 hover:text-red-700 font-medium">
-              Gestisci Clienti →
-            </Link>
-          </div>
+            <div className="text-sm text-slate-900 font-medium">
+              Vedi clienti →
+            </div>
+          </Link>
         </div>
       </div>
     </div>

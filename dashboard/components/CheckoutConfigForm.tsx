@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X, Plus, Trash2, ArrowRight, ArrowLeft, Phone, MessageCircle, Building2, Briefcase } from 'lucide-react';
 import { PHONE_PROVIDERS, INDUSTRIES, RESPONSE_MODES, WHATSAPP_LIMITS, getWhatsAppLimit, getIndustryStructuredOutput, STRUCTURED_FIELD_TYPES } from '@/lib/config';
 import { StructuredOutputField } from '@/lib/firebase';
@@ -31,6 +31,7 @@ export interface CheckoutConfig {
     fields: StructuredOutputField[];
   };
   order_details?: string;
+  voice_id?: string; // Voice selection (opzionale)
 }
 
 export function CheckoutConfigForm({ planId, onClose, onProceed }: CheckoutConfigFormProps) {
@@ -48,12 +49,12 @@ export function CheckoutConfigForm({ planId, onClose, onProceed }: CheckoutConfi
   const whatsappLimit = getWhatsAppLimit(planId);
   const plan = PRICING_PLANS[planId];
 
-  // Inizializza WhatsApp configs quando cambia industry o limit
-  const initializeWhatsAppConfigs = () => {
+  // Inizializza WhatsApp configs quando cambia industry o limit (usando useEffect)
+  useEffect(() => {
     if (config.whatsapp_configs.length === 0 && config.industry) {
       const defaultFields = getIndustryStructuredOutput(config.industry);
-      setConfig({
-        ...config,
+      setConfig((prevConfig) => ({
+        ...prevConfig,
         whatsapp_configs: Array.from({ length: whatsappLimit }, (_, i) => ({
           whatsapp_number: '',
           whatsapp_name: '',
@@ -62,9 +63,10 @@ export function CheckoutConfigForm({ planId, onClose, onProceed }: CheckoutConfi
           },
           enabled: i === 0, // Solo il primo abilitato di default
         })),
-      });
+      }));
     }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [config.industry, whatsappLimit]); // Esegui solo quando cambia industry o limit
 
   const handleIndustryChange = (industry: string) => {
     const defaultFields = getIndustryStructuredOutput(industry);
@@ -262,9 +264,6 @@ export function CheckoutConfigForm({ planId, onClose, onProceed }: CheckoutConfi
               </div>
 
               {config.whatsapp_configs.map((whatsapp, index) => {
-                if (!config.industry) {
-                  initializeWhatsAppConfigs();
-                }
                 return (
                   <div key={index} className="border border-slate-200 rounded-lg p-4 space-y-4">
                     <div className="flex items-center justify-between">
@@ -389,6 +388,26 @@ export function CheckoutConfigForm({ planId, onClose, onProceed }: CheckoutConfi
 
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">
+                      Voce dell'assistente (opzionale)
+                    </label>
+                    <select
+                      value={config.voice_id || ''}
+                      onChange={(e) => setConfig({ ...config, voice_id: e.target.value || undefined })}
+                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none"
+                    >
+                      <option value="">Voce predefinita (Maschile professionale)</option>
+                      <option value="21m00Tcm4TlvDq8ikWAM">Maschile professionale</option>
+                      <option value="EXAVITQu4vr4xnSDxMaL">Femminile professionale</option>
+                      <option value="pNInz6obpgDQGcFmaJgB">Maschile calda</option>
+                      <option value="ThT5KcBeYPX3keUQqHPh">Femminile calda</option>
+                    </select>
+                    <p className="text-xs text-slate-500 mt-1">
+                      Se non selezioni una voce, verrà usata quella predefinita
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
                       Note aggiuntive (opzionale)
                     </label>
                     <textarea
@@ -405,9 +424,10 @@ export function CheckoutConfigForm({ planId, onClose, onProceed }: CheckoutConfi
                     <ul className="text-sm text-slate-700 space-y-1">
                       <li>✅ Completerai il pagamento su Stripe</li>
                       <li>✅ Riceverai email di conferma ordine</li>
-                      <li>✅ Entro 1 settimana configureremo il tuo agent</li>
-                      <li>✅ Ti spiegheremo come attivare l'inoltro chiamate sul tuo provider</li>
-                      <li>✅ Il tuo centralino sarà attivo!</li>
+                      <li>✅ Il sistema creerà automaticamente il tuo agent AI</li>
+                      <li>✅ Acquistiamo automaticamente un numero Twilio per te</li>
+                      <li>✅ Riceverai istruzioni per attivare l'inoltro chiamate</li>
+                      <li>✅ Il tuo centralino sarà attivo in pochi minuti!</li>
                     </ul>
                   </div>
                 </div>
