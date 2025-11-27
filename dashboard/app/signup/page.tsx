@@ -95,77 +95,77 @@ export default function SignupPage() {
         </div>
 
         <div className="brick-card rounded-2xl p-8">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
               <label className="block text-sm font-semibold text-sand/80 mb-2">
-                Nome completo
-              </label>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+              Nome completo
+            </label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
                 className="w-full px-4 py-3 bg-brick-charcoal border border-white/10 focus:border-brick-accent outline-none transition-subtle text-sand rounded-md"
-                placeholder="Mario Rossi"
-                required
-              />
-            </div>
+              placeholder="Mario Rossi"
+              required
+            />
+          </div>
 
-            <div>
+          <div>
               <label className="block text-sm font-semibold text-sand/80 mb-2">
-                Email
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+              Email
+            </label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-4 py-3 bg-brick-charcoal border border-white/10 focus:border-brick-accent outline-none transition-subtle text-sand rounded-md"
-                placeholder="email@esempio.it"
-                required
-              />
-            </div>
+              placeholder="email@esempio.it"
+              required
+            />
+          </div>
 
-            <div>
+          <div>
               <label className="block text-sm font-semibold text-sand/80 mb-2">
-                Password
-              </label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+              Password
+            </label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-4 py-3 bg-brick-charcoal border border-white/10 focus:border-brick-accent outline-none transition-subtle text-sand rounded-md"
-                placeholder="••••••••"
-                required
-              />
-            </div>
+              placeholder="••••••••"
+              required
+            />
+          </div>
 
-            <div>
+          <div>
               <label className="block text-sm font-semibold text-sand/80 mb-2">
-                Conferma password
-              </label>
-              <input
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+              Conferma password
+            </label>
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
                 className="w-full px-4 py-3 bg-brick-charcoal border border-white/10 focus:border-brick-accent outline-none transition-subtle text-sand rounded-md"
-                placeholder="••••••••"
-                required
-              />
-            </div>
+              placeholder="••••••••"
+              required
+            />
+          </div>
 
-            {error && (
+          {error && (
               <div className="bg-brick-accent/10 border border-brick-accent/40 text-brick-accent px-4 py-3 text-sm rounded-md">
-                {error}
-              </div>
-            )}
+              {error}
+            </div>
+          )}
 
-            <button
-              type="submit"
-              disabled={loading}
+          <button
+            type="submit"
+            disabled={loading}
               className="w-full brick-gradient text-white font-semibold py-3 px-4 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-subtle shadow-brick"
-            >
+          >
               <span className="relative z-10">{loading ? 'Registrazione in corso...' : 'Crea account'}</span>
-            </button>
-          </form>
+          </button>
+        </form>
         </div>
 
         <div className="mt-8 text-center text-sm text-sand/60">

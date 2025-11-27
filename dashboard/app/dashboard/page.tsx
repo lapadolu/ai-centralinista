@@ -78,7 +78,7 @@ export default function DashboardHome() {
   if (checkingOrder || loading) {
     return (
       <div className="text-center py-12">
-        <div className="text-cyber-purple animate-pulse">Caricamento...</div>
+        <div className="text-brick-accent animate-pulse">Caricamento...</div>
       </div>
     );
   }
@@ -86,16 +86,16 @@ export default function DashboardHome() {
   if (!hasOrder) {
     return (
       <div className="space-y-6">
-        <div className="bg-cyber-gray/50 border-2 border-cyber-purple rounded-lg p-8 text-center glow-border-lg backdrop-blur-sm">
-          <h2 className="text-3xl font-bold text-white mb-4 cyber-gradient-text glow-text">
+        <div className="brick-card rounded-2xl p-12 text-center">
+          <h2 className="text-3xl font-semibold text-white mb-4 brick-gradient-text">
             Attiva il tuo Centralino AI
           </h2>
-          <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
+          <p className="text-sand/70 mb-8 max-w-2xl mx-auto text-lg">
             Scegli un piano per iniziare a ricevere chiamate e gestire i tuoi lead automaticamente.
           </p>
           <Link
             href="/dashboard/onboarding"
-            className="inline-flex items-center gap-2 cyber-gradient text-white px-8 py-4 rounded-sm font-bold transition-all hover:shadow-cyber-lg"
+            className="inline-flex items-center gap-2 brick-gradient text-white px-8 py-4 rounded-full font-semibold transition-subtle shadow-brick"
           >
             Vedi Piani Disponibili
             <ArrowRight className="w-5 h-5" />
@@ -106,87 +106,87 @@ export default function DashboardHome() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-12">
       {/* Welcome */}
-      <div className="scroll-reveal">
-        <h1 className="text-4xl font-black text-white mb-2 cyber-gradient-text glow-text">
+      <div className="mb-8">
+        <h1 className="text-4xl font-semibold text-white mb-3 brick-gradient-text">
           Benvenuto, {session?.user?.name || 'Agente'}
         </h1>
-        <p className="text-gray-400 text-lg">
+        <p className="text-sand/60 text-lg">
           Dashboard chiamate AI Centralinista
         </p>
       </div>
 
-      {/* Stats Cards - Cyberpunk */}
+      {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-cyber-gray/50 border border-cyber-purple/20 rounded-lg p-6 backdrop-blur-sm glow-border-hover scroll-reveal">
-          <div className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">Oggi</div>
-          <div className="text-4xl font-black text-white mb-1 cyber-gradient-text">{stats.today}</div>
-          <div className="text-sm text-gray-500">{stats.todayLeads} lead validi</div>
+        <div className="brick-card rounded-xl p-6">
+          <div className="text-xs font-semibold text-sand/50 uppercase tracking-wider mb-3">Oggi</div>
+          <div className="text-4xl font-semibold text-white mb-2 brick-gradient-text">{stats.today}</div>
+          <div className="text-sm text-sand/50">{stats.todayLeads} lead validi</div>
         </div>
 
-        <div className="bg-cyber-gray/50 border border-cyber-purple/20 rounded-lg p-6 backdrop-blur-sm glow-border-hover scroll-reveal">
-          <div className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">Settimana</div>
-          <div className="text-4xl font-black text-white mb-1">{stats.week}</div>
-          <div className="text-sm text-gray-500">chiamate</div>
+        <div className="brick-card rounded-xl p-6">
+          <div className="text-xs font-semibold text-sand/50 uppercase tracking-wider mb-3">Settimana</div>
+          <div className="text-4xl font-semibold text-white mb-2">{stats.week}</div>
+          <div className="text-sm text-sand/50">chiamate</div>
         </div>
 
-        <div className="bg-cyber-gray/50 border border-cyber-purple/20 rounded-lg p-6 backdrop-blur-sm glow-border-hover scroll-reveal">
-          <div className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">Mese</div>
-          <div className="text-4xl font-black text-white mb-1">{stats.month}</div>
-          <div className="text-sm text-gray-500">chiamate</div>
+        <div className="brick-card rounded-xl p-6">
+          <div className="text-xs font-semibold text-sand/50 uppercase tracking-wider mb-3">Mese</div>
+          <div className="text-4xl font-semibold text-white mb-2">{stats.month}</div>
+          <div className="text-sm text-sand/50">chiamate</div>
         </div>
 
-        <div className="bg-cyber-gray/50 border border-cyber-purple/20 rounded-lg p-6 backdrop-blur-sm glow-border-hover scroll-reveal">
-          <div className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">Lead Totali</div>
-          <div className="text-4xl font-black text-white mb-1">{stats.month}</div>
-          <div className="text-sm text-gray-500">questo mese</div>
+        <div className="brick-card rounded-xl p-6">
+          <div className="text-xs font-semibold text-sand/50 uppercase tracking-wider mb-3">Lead Totali</div>
+          <div className="text-4xl font-semibold text-white mb-2">{stats.month}</div>
+          <div className="text-sm text-sand/50">questo mese</div>
         </div>
       </div>
 
-      {/* Quick Actions - Cyberpunk */}
+      {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Link
           href="/dashboard/leads"
-          className="group bg-cyber-gray/50 border border-cyber-purple/30 rounded-lg p-6 backdrop-blur-sm glow-border-hover transition-all hover:border-cyber-purple scroll-reveal"
+          className="group brick-card rounded-xl p-6 transition-subtle brick-card-hover"
         >
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 rounded-lg bg-cyber-purple/20 flex items-center justify-center border border-cyber-purple/30">
-              <FileText className="w-5 h-5 text-cyber-purple" />
+          <div className="flex items-center gap-4 mb-4">
+            <div className="w-12 h-12 rounded-lg bg-brick-accent/20 flex items-center justify-center border border-brick-accent/30">
+              <FileText className="w-6 h-6 text-brick-accentLight" />
             </div>
-            <div className="text-lg font-bold text-white">Gestisci Lead</div>
+            <div className="text-lg font-semibold text-white">Gestisci Lead</div>
           </div>
-          <div className="text-gray-400 text-sm">
+          <div className="text-sand/60 text-sm">
             CRM completo con pipeline
           </div>
         </Link>
 
         <Link
           href="/dashboard/zones"
-          className="group bg-cyber-gray/50 border border-cyber-purple/30 rounded-lg p-6 backdrop-blur-sm glow-border-hover transition-all hover:border-cyber-purple scroll-reveal"
+          className="group brick-card rounded-xl p-6 transition-subtle brick-card-hover"
         >
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 rounded-lg bg-cyber-purple/20 flex items-center justify-center border border-cyber-purple/30">
-              <MapPin className="w-5 h-5 text-cyber-purple" />
+          <div className="flex items-center gap-4 mb-4">
+            <div className="w-12 h-12 rounded-lg bg-brick-accent/20 flex items-center justify-center border border-brick-accent/30">
+              <MapPin className="w-6 h-6 text-brick-accentLight" />
             </div>
-            <div className="text-lg font-bold text-white">Mappa Zone</div>
+            <div className="text-lg font-semibold text-white">Mappa Zone</div>
           </div>
-          <div className="text-gray-400 text-sm">
+          <div className="text-sand/60 text-sm">
             Assegna zone ai tuoi agenti
           </div>
         </Link>
 
         <Link
           href="/dashboard/analytics"
-          className="group bg-cyber-gray/50 border border-cyber-purple/30 rounded-lg p-6 backdrop-blur-sm glow-border-hover transition-all hover:border-cyber-purple scroll-reveal"
+          className="group brick-card rounded-xl p-6 transition-subtle brick-card-hover"
         >
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 rounded-lg bg-cyber-purple/20 flex items-center justify-center border border-cyber-purple/30">
-              <BarChart3 className="w-5 h-5 text-cyber-purple" />
+          <div className="flex items-center gap-4 mb-4">
+            <div className="w-12 h-12 rounded-lg bg-brick-accent/20 flex items-center justify-center border border-brick-accent/30">
+              <BarChart3 className="w-6 h-6 text-brick-accentLight" />
             </div>
-            <div className="text-lg font-bold text-white">Analytics</div>
+            <div className="text-lg font-semibold text-white">Analytics</div>
           </div>
-          <div className="text-gray-400 text-sm">
+          <div className="text-sand/60 text-sm">
             Insights e statistiche
           </div>
         </Link>
@@ -196,59 +196,59 @@ export default function DashboardHome() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Link
           href="/dashboard/calls"
-          className="group bg-cyber-gray/50 border border-cyber-purple/30 rounded-lg p-6 backdrop-blur-sm glow-border-hover transition-all hover:border-cyber-purple scroll-reveal"
+          className="group brick-card rounded-xl p-6 transition-subtle brick-card-hover"
         >
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 rounded-lg bg-cyber-purple/20 flex items-center justify-center border border-cyber-purple/30">
-              <Phone className="w-5 h-5 text-cyber-purple" />
+          <div className="flex items-center gap-4 mb-4">
+            <div className="w-12 h-12 rounded-lg bg-brick-accent/20 flex items-center justify-center border border-brick-accent/30">
+              <Phone className="w-6 h-6 text-brick-accentLight" />
             </div>
-            <div className="text-lg font-bold text-white">Registro Chiamate</div>
+            <div className="text-lg font-semibold text-white">Registro Chiamate</div>
           </div>
-          <div className="text-gray-400 text-sm">
+          <div className="text-sand/60 text-sm">
             Visualizza tutte le chiamate ricevute
           </div>
         </Link>
       </div>
 
-      {/* Recent Calls - Cyberpunk */}
-      <div className="bg-cyber-gray/50 border border-cyber-purple/20 rounded-lg backdrop-blur-sm glow-border scroll-reveal">
-        <div className="p-6 border-b border-cyber-purple/20">
+      {/* Recent Calls */}
+      <div className="brick-card rounded-xl">
+        <div className="p-6 border-b border-white/5">
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-bold text-white">
+            <h2 className="text-xl font-semibold text-white">
               Ultime Chiamate
             </h2>
             <Link
               href="/dashboard/leads"
-              className="text-sm text-cyber-purple hover:text-cyber-pink font-semibold hover:glow-text transition-all"
+              className="text-sm text-brick-accentLight hover:text-brick-accent font-semibold transition-subtle"
             >
               Vedi tutte →
             </Link>
           </div>
         </div>
 
-        <div className="divide-y divide-cyber-purple/10">
+        <div className="divide-y divide-white/5">
           {recentCalls.length > 0 ? (
             recentCalls.map((call) => (
-              <div key={call.id} className="p-6 hover:bg-cyber-purple/5 transition-all">
-                <div className="flex items-start justify-between">
+              <div key={call.id} className="p-6 hover:bg-white/5 transition-subtle">
+                <div className="flex items-start justify-between gap-6">
                   <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h3 className="font-bold text-white">{call.nome || 'Cliente'}</h3>
-                      <span className="text-xs text-gray-500">{call.timestamp || 'Data non disponibile'}</span>
+                    <div className="flex items-center gap-4 mb-3">
+                      <h3 className="font-semibold text-white">{call.nome || 'Cliente'}</h3>
+                      <span className="text-xs text-sand/40">{call.timestamp || 'Data non disponibile'}</span>
                     </div>
                     
-                    <div className="text-sm text-gray-400 mb-2">
+                    <div className="text-sm text-sand/60 mb-2">
                       {call.zona || 'Zona non specificata'}
                     </div>
                     
-                    <div className="text-sm text-gray-300 font-medium">
+                    <div className="text-sm text-sand/70 font-medium">
                       {call.telefono || 'Telefono non disponibile'}
                     </div>
                   </div>
 
                   <Link
                     href="/dashboard/leads"
-                    className="px-4 py-2 bg-cyber-purple/20 border border-cyber-purple/50 text-cyber-purple text-sm rounded-sm transition-all hover:bg-cyber-purple/30 hover:glow-border font-semibold"
+                    className="px-5 py-2 bg-brick-accent/20 border border-brick-accent/30 text-brick-accentLight text-sm rounded-full transition-subtle hover:bg-brick-accent/30 hover:border-brick-accent/50 font-semibold whitespace-nowrap"
                   >
                     Dettagli
                   </Link>
@@ -256,9 +256,9 @@ export default function DashboardHome() {
               </div>
             ))
           ) : (
-            <div className="p-12 text-center text-gray-500">
-              <p className="mb-4">Nessuna chiamata ancora</p>
-              <p className="text-sm text-gray-600">Le chiamate ricevute appariranno qui automaticamente</p>
+            <div className="p-12 text-center text-sand/50">
+              <p className="mb-2 text-lg">Nessuna chiamata ancora</p>
+              <p className="text-sm text-sand/40">Le chiamate ricevute appariranno qui automaticamente</p>
             </div>
           )}
         </div>

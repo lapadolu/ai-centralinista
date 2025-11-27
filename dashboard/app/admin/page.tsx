@@ -202,7 +202,7 @@ export default function AdminDashboard() {
             <div className="text-sm text-slate-900 font-medium">
               Vedi Report →
             </div>
-          </Link>
+            </Link>
 
           <Link href="/admin/clients" className="border border-slate-200 p-6 hover:border-slate-900 transition-colors">
             <h3 className="font-semibold text-slate-900 mb-2">Gestione Clienti</h3>
@@ -211,8 +211,8 @@ export default function AdminDashboard() {
             </p>
             <div className="text-sm text-slate-900 font-medium">
               Vedi clienti →
-            </div>
-          </Link>
+          </div>
+            </Link>
         </div>
       </div>
     </div>

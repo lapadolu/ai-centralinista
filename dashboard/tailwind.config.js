@@ -9,13 +9,18 @@ module.exports = {
     extend: {
       colors: {
         brick: {
-          dark: '#0f0d0d',
-          charcoal: '#1b1a1a',
-          stone: '#262626',
+          dark: '#1a1818',
+          charcoal: '#252323',
+          stone: '#2e2c2c',
           accent: '#b63a2b',
           accentDark: '#8b1d2c',
           accentLight: '#d76d5b',
           sand: '#f2e8d5',
+        },
+        sand: {
+          DEFAULT: '#f2e8d5',
+          light: '#f8f4ef',
+          dark: '#e8ddd0',
         },
       },
       fontFamily: {
