@@ -28,7 +28,7 @@ export default function PrivacyPage() {
 
           <div className="prose prose-slate max-w-none space-y-6 text-slate-700">
             <p className="text-sm text-slate-500">
-              <strong>Ultimo aggiornamento:</strong> Dicembre 2024
+              <strong>Ultimo aggiornamento:</strong> Gennaio 2025
             </p>
 
             <section>
@@ -51,6 +51,7 @@ export default function PrivacyPage() {
                 <li><strong>Dati account:</strong> Nome, email, password (criptata)</li>
                 <li><strong>Dati pagamento:</strong> Informazioni fornite tramite Stripe (non memorizziamo dati carte)</li>
                 <li><strong>Dati chiamate:</strong> Registrazioni, trascrizioni, informazioni clienti dalle chiamate</li>
+                <li><strong>Dati CRM/Lead:</strong> Nome, telefono, richieste, preferenze dei clienti che chiamano il centralino AI. <strong>IMPORTANTE:</strong> Questi dati vengono salvati nel nostro sistema CRM solo previo consenso esplicito del cliente durante la chiamata. Se il cliente non acconsente, i dati vengono anonimizzati.</li>
                 <li><strong>Dati utilizzo:</strong> Statistiche di utilizzo del servizio</li>
                 <li><strong>Dati tecnici:</strong> Indirizzo IP, tipo browser, dispositivi utilizzati</li>
               </ul>
@@ -73,11 +74,17 @@ export default function PrivacyPage() {
 
             <section>
               <h2 className="text-2xl font-semibold text-slate-900 mt-8 mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
-                4. Base Giuridica
+                4. Base Giuridica e Consenso
               </h2>
               <p>
                 Il trattamento dei dati si basa su: esecuzione contratto, consenso, interesse legittimo, e
                 adempimento obblighi legali.
+              </p>
+              <p className="mt-4">
+                <strong>Consenso per dati CRM/Lead:</strong> Per i dati dei clienti che chiamano il centralino AI (nome, telefono, richieste),
+                richiediamo un <strong>consenso esplicito</strong> durante la chiamata. L'assistente AI chiederà esplicitamente:
+                "Acconsenti al trattamento di questi dati per essere ricontattato?" Se il cliente non acconsente, i dati vengono
+                anonimizzati e non vengono salvati nel CRM. Il consenso può essere revocato in qualsiasi momento contattandoci.
               </p>
             </section>
 

@@ -121,51 +121,51 @@ export default function LeadsPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">CRM Lead</h1>
-        <p className="text-slate-600 mt-1">Gestisci tutti i tuoi contatti</p>
+        <h1 className="text-3xl font-semibold text-white brick-gradient-text">CRM Lead</h1>
+        <p className="text-sand/60 mt-2">Gestisci tutti i tuoi contatti</p>
       </div>
 
       {/* Status Pills */}
-      <div className="flex gap-2">
+      <div className="flex gap-3">
         <button
           onClick={() => setFilter('all')}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+          className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-subtle ${
             filter === 'all'
-              ? 'bg-slate-900 text-white'
-              : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+              ? 'brick-gradient text-white shadow-brick'
+              : 'brick-card text-sand/70 hover:text-white hover:border-white/20'
           }`}
         >
           Tutti ({leads.length})
         </button>
         <button
           onClick={() => setFilter('nuovo')}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+          className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-subtle ${
             filter === 'nuovo'
-              ? 'bg-red-500 text-white'
-              : 'bg-red-50 text-red-600 hover:bg-red-100'
+              ? 'bg-brick-accent/40 border border-brick-accentLight text-white'
+              : 'brick-card text-sand/70 hover:text-brick-accentLight hover:border-brick-accent/30'
           }`}
         >
           Nuovi ({statusCounts.nuovo})
         </button>
         <button
           onClick={() => setFilter('contattato')}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+          className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-subtle ${
             filter === 'contattato'
-              ? 'bg-yellow-500 text-white'
-              : 'bg-yellow-50 text-yellow-600 hover:bg-yellow-100'
+              ? 'bg-brick-accentLight/30 border border-brick-accentLight/50 text-white'
+              : 'brick-card text-sand/70 hover:text-brick-accentLight hover:border-brick-accent/30'
           }`}
         >
           Contattati ({statusCounts.contattato})
         </button>
         <button
           onClick={() => setFilter('chiuso')}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+          className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-subtle ${
             filter === 'chiuso'
-              ? 'bg-green-500 text-white'
-              : 'bg-green-50 text-green-600 hover:bg-green-100'
+              ? 'bg-brick-accentLight/30 border border-brick-accentLight/50 text-white'
+              : 'brick-card text-sand/70 hover:text-brick-accentLight hover:border-brick-accent/30'
           }`}
         >
           Chiusi ({statusCounts.chiuso})
@@ -179,99 +179,99 @@ export default function LeadsPage() {
           placeholder="Filtra per zona..."
           value={searchZone}
           onChange={(e) => setSearchZone(e.target.value)}
-          className="flex-1 px-4 py-2 border border-slate-300 rounded-lg"
+          className="flex-1 px-4 py-2.5 brick-card rounded-xl text-sand/80 placeholder-sand/40 bg-white/5 border border-white/10 focus:border-brick-accent/50 focus:outline-none transition-subtle"
         />
-        <button className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition">
+        <button className="px-6 py-2.5 bg-brick-accent/30 border border-brick-accentLight/50 text-white rounded-xl font-semibold transition-subtle hover:bg-brick-accent/40">
           Export CSV
         </button>
       </div>
 
       {/* Leads List */}
-      <div className="bg-white rounded-lg shadow divide-y divide-slate-100">
+      <div className="brick-card rounded-xl divide-y divide-white/5">
         {filteredLeads.map((lead) => (
           <div 
             key={lead.id} 
-            className={`p-6 hover:bg-slate-50 transition border-l-4 ${
-              lead.priority === 'alta' ? 'border-red-500' :
-              lead.priority === 'media' ? 'border-yellow-500' :
-              'border-slate-300'
+            className={`p-6 hover:bg-white/5 transition-subtle border-l-4 ${
+              lead.priority === 'alta' ? 'border-brick-accent' :
+              lead.priority === 'media' ? 'border-brick-accentLight' :
+              'border-white/10'
             }`}
           >
-            <div className="flex items-start justify-between">
+            <div className="flex items-start justify-between gap-6">
               <div className="flex-1">
                 {/* Header */}
-                <div className="flex items-center gap-3 mb-3 flex-wrap">
-                  <h3 className="text-lg font-semibold text-slate-900">{lead.nome}</h3>
-                  <span className="text-xs text-slate-500">{lead.timestamp}</span>
-                  <span className={`px-2 py-1 rounded text-xs font-medium ${
-                    lead.status === 'nuovo' ? 'bg-red-100 text-red-700' :
-                    lead.status === 'contattato' ? 'bg-yellow-100 text-yellow-700' :
-                    'bg-green-100 text-green-700'
+                <div className="flex items-center gap-3 mb-4 flex-wrap">
+                  <h3 className="text-lg font-semibold text-white">{lead.nome}</h3>
+                  <span className="text-xs text-sand/40">{lead.timestamp}</span>
+                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                    lead.status === 'nuovo' ? 'bg-brick-accent/30 text-brick-accentLight border border-brick-accent/50' :
+                    lead.status === 'contattato' ? 'bg-brick-accentLight/20 text-brick-accentLight border border-brick-accentLight/30' :
+                    'bg-brick-accentLight/20 text-brick-accentLight border border-brick-accentLight/30'
                   }`}>
                     {lead.status.toUpperCase()}
                   </span>
-                  <span className={`px-2 py-1 rounded text-xs font-bold ${
-                    lead.priority === 'alta' ? 'bg-red-500 text-white' :
-                    lead.priority === 'media' ? 'bg-yellow-500 text-white' :
-                    'bg-slate-400 text-white'
+                  <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                    lead.priority === 'alta' ? 'bg-brick-accent/40 text-white' :
+                    lead.priority === 'media' ? 'bg-brick-accentLight/30 text-white' :
+                    'bg-white/10 text-sand/60'
                   }`}>
                     {lead.priority.toUpperCase()} ({lead.score})
                   </span>
                   {lead.duration > 0 && (
-                    <span className="text-xs text-slate-500">
+                    <span className="text-xs text-sand/40">
                       Durata: {Math.floor(lead.duration / 60)}:{(lead.duration % 60).toString().padStart(2, '0')}
                     </span>
                   )}
                 </div>
 
                 {/* Critical Info Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-3">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                   <div>
-                    <div className="text-xs text-slate-500 mb-1">Telefono</div>
-                    <div className="text-sm font-medium text-slate-900">{lead.telefono}</div>
+                    <div className="text-xs text-sand/50 mb-1">Telefono</div>
+                    <div className="text-sm font-medium text-sand/80">{lead.telefono}</div>
                   </div>
                   <div>
-                    <div className="text-xs text-slate-500 mb-1">Richiesta</div>
-                    <div className="text-sm font-medium text-slate-900">{lead.tipo_richiesta.toUpperCase()}</div>
+                    <div className="text-xs text-sand/50 mb-1">Richiesta</div>
+                    <div className="text-sm font-medium text-white">{lead.tipo_richiesta.toUpperCase()}</div>
                   </div>
                   <div>
-                    <div className="text-xs text-slate-500 mb-1">Zona</div>
-                    <div className="text-sm font-medium text-slate-900">{lead.zona}</div>
+                    <div className="text-xs text-sand/50 mb-1">Zona</div>
+                    <div className="text-sm font-medium text-sand/80">{lead.zona}</div>
                   </div>
                   {lead.budget !== 'Non specificato' && (
                     <div>
-                      <div className="text-xs text-slate-500 mb-1">Budget</div>
-                      <div className="text-sm font-medium text-green-600">{lead.budget}</div>
+                      <div className="text-xs text-sand/50 mb-1">Budget</div>
+                      <div className="text-sm font-medium text-brick-accentLight">{lead.budget}</div>
                     </div>
                   )}
                 </div>
 
                 {/* Note Priority */}
                 {lead.note && lead.note.trim() && (
-                  <div className={`border-l-4 p-3 mb-3 ${
-                    lead.priority === 'alta' ? 'bg-red-50 border-red-500' :
-                    lead.priority === 'media' ? 'bg-yellow-50 border-yellow-500' :
-                    'bg-blue-50 border-blue-500'
+                  <div className={`border-l-4 p-4 mb-4 rounded-r-xl ${
+                    lead.priority === 'alta' ? 'bg-brick-accent/10 border-brick-accent' :
+                    lead.priority === 'media' ? 'bg-brick-accentLight/10 border-brick-accentLight' :
+                    'bg-white/5 border-white/20'
                   }`}>
-                    <div className="text-xs font-semibold text-slate-700 mb-1">Note Cliente:</div>
-                    <div className="text-sm text-slate-900">{lead.note}</div>
+                    <div className="text-xs font-semibold text-sand/60 mb-2">Note Cliente:</div>
+                    <div className="text-sm text-sand/80">{lead.note}</div>
                   </div>
                 )}
 
                 {/* Request Summary */}
-                <div className="text-sm text-slate-600">
-                  <span className="font-medium">{lead.tipo_immobile}</span>
+                <div className="text-sm text-sand/60">
+                  <span className="font-medium text-sand/80">{lead.tipo_immobile}</span>
                   {lead.budget !== 'Non specificato' && (
-                    <> · <span className="text-green-600 font-medium">{lead.budget}</span></>
+                    <> · <span className="text-brick-accentLight font-medium">{lead.budget}</span></>
                   )}
                 </div>
               </div>
 
               {/* Actions */}
-              <div className="flex flex-col gap-2 ml-4">
+              <div className="flex flex-col gap-2">
                 <a
                   href={`tel:${lead.telefono}`}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition text-center"
+                  className="px-4 py-2 bg-brick-accent/30 border border-brick-accentLight/50 text-white text-sm rounded-full transition-subtle hover:bg-brick-accent/40 text-center font-semibold"
                 >
                   Chiama
                 </a>
@@ -279,7 +279,7 @@ export default function LeadsPage() {
                 {lead.status === 'nuovo' && (
                   <button
                     onClick={() => updateLeadStatus(lead.id, 'contattato')}
-                    className="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white text-sm rounded-lg transition"
+                    className="px-4 py-2 bg-brick-accentLight/30 border border-brick-accentLight/50 text-white text-sm rounded-full transition-subtle hover:bg-brick-accentLight/40 font-semibold"
                   >
                     ✓ Contattato
                   </button>
@@ -288,7 +288,7 @@ export default function LeadsPage() {
                 {lead.status === 'contattato' && (
                   <button
                     onClick={() => updateLeadStatus(lead.id, 'chiuso')}
-                    className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white text-sm rounded-lg transition"
+                    className="px-4 py-2 bg-brick-accentLight/30 border border-brick-accentLight/50 text-white text-sm rounded-full transition-subtle hover:bg-brick-accentLight/40 font-semibold"
                   >
                     ✓ Chiudi
                   </button>
@@ -296,7 +296,7 @@ export default function LeadsPage() {
                 
                 <button
                   onClick={() => setSelectedLead(lead)}
-                  className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-sm rounded-lg transition"
+                  className="px-4 py-2 brick-card text-sand/70 hover:text-white text-sm rounded-full transition-subtle font-semibold"
                 >
                   Dettagli
                 </button>
@@ -306,73 +306,74 @@ export default function LeadsPage() {
         ))}
 
         {filteredLeads.length === 0 && (
-          <div className="p-12 text-center text-slate-500">
-            Nessun lead trovato
+          <div className="p-12 text-center text-sand/50">
+            <p className="text-lg mb-2">Nessun lead trovato</p>
+            <p className="text-sm text-sand/40">Le chiamate ricevute appariranno qui automaticamente</p>
           </div>
         )}
       </div>
 
       {/* Lead Detail Modal */}
       {selectedLead && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="brick-card rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-start mb-6">
-              <h2 className="text-2xl font-bold text-slate-900">{selectedLead.nome}</h2>
+              <h2 className="text-2xl font-semibold text-white brick-gradient-text">{selectedLead.nome}</h2>
               <button
                 onClick={() => setSelectedLead(null)}
-                className="text-slate-400 hover:text-slate-600"
+                className="text-sand/40 hover:text-white transition-subtle"
               >
                 ✕
               </button>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-5">
               <div>
-                <div className="text-sm text-slate-600 mb-1">Telefono</div>
-                <div className="text-lg font-medium text-slate-900">{selectedLead.telefono}</div>
+                <div className="text-sm text-sand/50 mb-2">Telefono</div>
+                <div className="text-lg font-medium text-white">{selectedLead.telefono}</div>
               </div>
 
               <div>
-                <div className="text-sm text-slate-600 mb-1">Richiesta</div>
-                <div className="text-slate-900">
+                <div className="text-sm text-sand/50 mb-2">Richiesta</div>
+                <div className="text-sand/80">
                   {selectedLead.tipo_richiesta.toUpperCase()} · {selectedLead.tipo_immobile} · {selectedLead.zona}
                 </div>
               </div>
 
               {selectedLead.budget !== 'Non specificato' && (
                 <div>
-                  <div className="text-sm text-slate-600 mb-1">Budget</div>
-                  <div className="text-slate-900">{selectedLead.budget}</div>
+                  <div className="text-sm text-sand/50 mb-2">Budget</div>
+                  <div className="text-brick-accentLight font-medium">{selectedLead.budget}</div>
                 </div>
               )}
 
               {selectedLead.note && (
                 <div>
-                  <div className="text-sm text-slate-600 mb-1">Note Cliente</div>
-                  <div className="p-3 bg-blue-50 rounded-lg text-slate-900">
+                  <div className="text-sm text-sand/50 mb-2">Note Cliente</div>
+                  <div className="p-4 bg-white/5 rounded-xl text-sand/80 border border-white/10">
                     {selectedLead.note}
                   </div>
                 </div>
               )}
 
-              <div className="grid grid-cols-2 gap-4 pt-4">
+              <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/5">
                 <div>
-                  <div className="text-sm text-slate-600">Chiamata Ricevuta</div>
-                  <div className="text-slate-900">{selectedLead.timestamp}</div>
+                  <div className="text-sm text-sand/50 mb-1">Chiamata Ricevuta</div>
+                  <div className="text-sand/70">{selectedLead.timestamp}</div>
                 </div>
                 <div>
-                  <div className="text-sm text-slate-600">Durata</div>
-                  <div className="text-slate-900">
+                  <div className="text-sm text-sand/50 mb-1">Durata</div>
+                  <div className="text-sand/70">
                     {Math.floor(selectedLead.duration / 60)}:{(selectedLead.duration % 60).toString().padStart(2, '0')}
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="flex gap-2 mt-6">
+            <div className="flex gap-3 mt-8">
               <a
                 href={`tel:${selectedLead.telefono}`}
-                className="flex-1 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium text-center transition"
+                className="flex-1 px-5 py-3 bg-brick-accent/30 border border-brick-accentLight/50 text-white rounded-full font-semibold text-center transition-subtle hover:bg-brick-accent/40"
               >
                 Chiama Ora
               </a>
@@ -380,7 +381,7 @@ export default function LeadsPage() {
                 href={`https://wa.me/${selectedLead.telefono.replace(/[^0-9]/g, '')}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 px-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium text-center transition"
+                className="flex-1 px-5 py-3 bg-brick-accentLight/30 border border-brick-accentLight/50 text-white rounded-full font-semibold text-center transition-subtle hover:bg-brick-accentLight/40"
               >
                 WhatsApp
               </a>
