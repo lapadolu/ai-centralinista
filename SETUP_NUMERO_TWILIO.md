@@ -238,3 +238,28 @@ Quando si chiude il secondo cliente (Gianluca se Federico è il primo, o vicever
 ---
 
 **Ultimo aggiornamento:** 2025-01-28
+
+---
+
+## ⚠️ PERCHÉ NON POSSONO CONDIVIDERE UN NUMERO?
+
+### Problema 1: Limite Fisico del Numero
+**Un numero Twilio può gestire UNA SOLA chiamata alla volta!**
+
+Se due clienti condividono lo stesso numero:
+- ✅ Chiamata 1 arriva → numero occupato → chiamata gestita
+- ❌ Chiamata 2 arriva (contemporanea) → **RIMBALZATA/BUSY** perché il numero è già in uso!
+
+**Esempio:**
+- Federico e Gianluca condividono `+39XXXXXXXXX`
+- Alle 10:00 arriva chiamata per Federico → numero occupato
+- Alle 10:00:30 arriva chiamata per Gianluca → **RIMBALZATA** (numero già occupato)
+
+### Problema 2: Routing Assistant
+Anche se il numero potesse gestire più chiamate, Vapi non può sapere quale assistant usare quando arriva una chiamata su un numero condiviso.
+
+### Soluzione: Un Numero = Un Cliente
+- ✅ Federico ha `+39XXXXXXXXX` → gestisce le sue chiamate
+- ✅ Gianluca ha `+39YYYYYYYYY` → gestisce le sue chiamate
+- ✅ Chiamate simultanee → ogni numero gestisce la sua → nessun rimbocco
+
