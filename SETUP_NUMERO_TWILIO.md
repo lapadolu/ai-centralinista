@@ -1,33 +1,40 @@
 # 📞 Setup Numero Twilio - Guida Completa
 
 **Data:** 2025-01-28  
-**Scopo:** Configurare un numero Twilio condiviso per ricevere chiamate e inviare WhatsApp
+**Scopo:** Configurare un numero Twilio DEDICATO per ogni cliente
 
 ---
 
 ## 🎯 Architettura
 
-### Flusso Chiamata
-1. **Cliente** (Federico Iconacasa O Gianluca Tempocasa) configura **inoltro chiamata** dal suo numero fisso → **Numero Twilio**
-2. Quando qualcuno chiama il numero fisso del cliente, la chiamata viene **inoltrata al Numero Twilio**
-3. **Numero Twilio** è collegato a **Vapi Assistant** del cliente
-4. **Vapi** analizza la chiamata in tempo reale
-5. Alla fine della chiamata, **Vapi** invia dati al **webhook** (`vapi-webhook` Cloud Function)
-6. Il **webhook** salva i dati in Firestore e invia **WhatsApp** con il riassunto usando lo **STESSO numero Twilio**
+### ⚠️ IMPORTANTE: Un Numero Twilio = Un Cliente
+**NON possono condividere un numero!** Se due clienti condividono lo stesso numero e ricevono chiamate contemporaneamente, Vapi non può sapere quale assistant usare.
 
-### Requisiti Numero Twilio
+### Flusso Chiamata
+1. **Cliente** (Federico Iconacasa O Gianluca Tempocasa) ha il **SUO numero Twilio dedicato**
+2. Cliente configura **inoltro chiamata** dal suo numero fisso → **SUO Numero Twilio**
+3. Quando qualcuno chiama il numero fisso del cliente, la chiamata viene **inoltrata al Numero Twilio del cliente**
+4. **Numero Twilio** è collegato a **Vapi Assistant** del cliente (1:1 mapping)
+5. **Vapi** analizza la chiamata in tempo reale
+6. Alla fine della chiamata, **Vapi** invia dati al **webhook** (`vapi-webhook` Cloud Function)
+7. Il **webhook** salva i dati in Firestore e invia **WhatsApp** con il riassunto usando lo **STESSO numero Twilio del cliente**
+
+### Requisiti Numero Twilio (per cliente)
 - ✅ **Voice**: Ricevere chiamate (per Vapi)
 - ✅ **WhatsApp Business API**: Inviare messaggi WhatsApp
 - ⚠️ **SMS**: NON necessario (numero solo voice)
+- ✅ **Dedicato**: Un numero per cliente (NON condiviso)
 
 ---
 
 ## 📋 Setup Step-by-Step
 
-### 1. Acquisire Numero Twilio
+### 1. Acquisire Numero Twilio (PER OGNI CLIENTE)
+
+**Ogni cliente deve avere il SUO numero Twilio dedicato.**
 
 #### Opzione A: Numero già posseduto
-- Se hai già un numero Twilio, salta al punto 2
+- Se hai già un numero Twilio per il cliente, salta al punto 2
 
 #### Opzione B: Acquistare nuovo numero
 1. Vai su [Twilio Console](https://console.twilio.com/)
@@ -39,25 +46,28 @@
      - ✅ WhatsApp (se disponibile)
    - **Type**: Local o Mobile
 4. Acquista il numero
+5. **Ripeti per ogni cliente** (Federico ha il suo, Gianluca ha il suo)
 
 ### 2. Configurare WhatsApp Business API
 
 1. Vai su [Twilio Console → Messaging → Try it out → Send a WhatsApp message](https://console.twilio.com/us1/develop/sms/try-it-out/whatsapp-learn)
 2. Segui la procedura per abilitare WhatsApp Business API sul numero
 3. **Nota**: Potrebbe richiedere verifica business (24-48h)
+4. **Ripeti per ogni numero Twilio** (ogni cliente)
 
-### 3. Configurare Numero in Vapi
+### 3. Configurare Numero in Vapi (PER OGNI CLIENTE)
 
-Il numero Twilio deve essere collegato all'assistant Vapi del cliente.
+**Ogni cliente deve avere il SUO numero Twilio dedicato.**
 
 #### Via Dashboard Admin
 1. Login come admin
-2. Vai a `/admin/setup/[orderId]` per il cliente (Federico o Gianluca)
-3. Inserisci il numero Twilio nel formato: `+39XXXXXXXXX` (es: `+393394197445`)
+2. Vai a `/admin/setup/[orderId]` per il cliente (Federico O Gianluca)
+3. Inserisci il numero Twilio DEDICATO del cliente nel formato: `+39XXXXXXXXX` (es: `+393394197445`)
 4. Clicca "Aggiungi Numero"
 5. Il sistema:
    - Salva il numero in Firestore (`orders/{orderId}/twilio_phone_number`)
-   - Collega il numero all'assistant Vapi tramite API Vapi
+   - Collega il numero all'assistant Vapi del cliente tramite API Vapi
+   - **Mapping 1:1**: Numero Twilio → Assistant Vapi → Cliente
 
 #### Via API Diretta
 ```bash
@@ -74,22 +84,27 @@ POST /api/admin/orders/[orderId]/set-twilio-number
 2. Seleziona l'assistant del cliente
 3. Verifica che il numero Twilio sia collegato
 4. Verifica che il webhook sia configurato: `https://europe-west1-ai-centralinista-2025.cloudfunctions.net/vapi-webhook`
+5. **Ripeti per ogni cliente**
 
 ### 5. Configurare Environment Variables
 
+**NOTA**: Le env vars `TWILIO_WHATSAPP_NUMBER` e `TWILIO_DESTINATION_WHATSAPP` sono per il sistema generale. Ogni cliente ha il suo numero salvato in Firestore (`orders/{orderId}/twilio_phone_number`).
+
 #### Vercel (Frontend)
 ```
-TWILIO_WHATSAPP_NUMBER=whatsapp:+39XXXXXXXXX
-TWILIO_DESTINATION_WHATSAPP=whatsapp:+39YYYYYYYYY
+TWILIO_WHATSAPP_NUMBER=whatsapp:+39XXXXXXXXX  # Numero default/fallback (opzionale)
+TWILIO_DESTINATION_WHATSAPP=whatsapp:+39YYYYYYYYY  # Destinatario default per WhatsApp
 ```
-- `TWILIO_WHATSAPP_NUMBER`: Il numero Twilio che invia WhatsApp (formato `whatsapp:+39...`)
-- `TWILIO_DESTINATION_WHATSAPP`: Numero WhatsApp dell'agente che riceve i riassunti (formato `whatsapp:+39...`)
+- `TWILIO_WHATSAPP_NUMBER`: Numero Twilio default (usato se numero cliente non configurato)
+- `TWILIO_DESTINATION_WHATSAPP`: Numero WhatsApp dell'agente che riceve i riassunti (default, può essere sovrascritto da routing zone)
 
 #### Google Cloud Functions (Backend)
 ```
-TWILIO_WHATSAPP_NUMBER=whatsapp:+39XXXXXXXXX
-TWILIO_DESTINATION_WHATSAPP=whatsapp:+39YYYYYYYYY
+TWILIO_WHATSAPP_NUMBER=whatsapp:+39XXXXXXXXX  # Numero default/fallback (opzionale)
+TWILIO_DESTINATION_WHATSAPP=whatsapp:+39YYYYYYYYY  # Destinatario default per WhatsApp
 ```
+
+**IMPORTANTE**: Il numero Twilio del cliente viene letto da Firestore (`orders/{orderId}/twilio_phone_number`) quando si invia WhatsApp. Non serve configurarlo nelle env vars.
 
 ### 6. Configurare Inoltro Chiamata (Cliente)
 
@@ -107,7 +122,7 @@ Il cliente deve configurare l'inoltro di chiamata dal suo numero fisso al numero
 
 1. **Test Chiamata**:
    - Chiama il numero fisso del cliente
-   - Verifica che la chiamata venga inoltrata al numero Twilio
+   - Verifica che la chiamata venga inoltrata al numero Twilio del cliente
    - Verifica che Vapi risponda e analizzi la chiamata
 
 2. **Test Webhook**:
@@ -118,21 +133,27 @@ Il cliente deve configurare l'inoltro di chiamata dal suo numero fisso al numero
    - Verifica che messaggio WhatsApp arrivi su `TWILIO_DESTINATION_WHATSAPP`
    - Verifica formato messaggio (riassunto, dati cliente, raccomandazione)
 
+4. **Test Chiamate Simultaneee**:
+   - Chiama entrambi i clienti contemporaneamente
+   - Verifica che ogni chiamata vada al suo assistant corretto
+   - Verifica che ogni WhatsApp arrivi con i dati del cliente corretto
+
 ---
 
-## 🔄 Cambio Cliente (Quando si chiude il secondo)
+## 🔄 Setup Cliente Successivo
 
 Quando si chiude il secondo cliente (Gianluca se Federico è il primo, o viceversa):
 
-1. **Collega numero Twilio al nuovo assistant**:
+1. **Acquista NUOVO numero Twilio** per il secondo cliente
+2. **Collega numero Twilio al nuovo assistant**:
    - Vai a `/admin/setup/[orderId]` per il nuovo cliente
-   - Inserisci lo stesso numero Twilio
-   - Il sistema sovrascriverà il collegamento precedente
+   - Inserisci il NUOVO numero Twilio (NON lo stesso del primo!)
+   - Il sistema collegherà il numero all'assistant del nuovo cliente
 
-2. **Verifica**:
-   - Numero Twilio ora collegato al nuovo assistant
-   - Vecchio cliente non riceve più chiamate su quel numero
-   - Nuovo cliente riceve chiamate inoltrate
+3. **Verifica**:
+   - Ogni cliente ha il suo numero Twilio dedicato
+   - Ogni numero è collegato al suo assistant Vapi
+   - Chiamate simultanee funzionano correttamente (ogni numero → suo assistant)
 
 ---
 
@@ -159,13 +180,19 @@ Quando si chiude il secondo cliente (Gianluca se Federico è il primo, o vicever
 - **Check**: Numero verificato in Twilio Console?
 - **Check**: Formato corretto: `whatsapp:+39XXXXXXXXX` (non solo `+39...`)
 
+### Problema: Chiamate simultanee vanno al cliente sbagliato
+- **Check**: Ogni cliente ha il SUO numero Twilio dedicato?
+- **Check**: Ogni numero è collegato al SUO assistant Vapi?
+- **Check**: Mapping 1:1 rispettato (Numero → Assistant → Cliente)?
+
 ---
 
 ## 📝 Note Importanti
 
-1. **Un numero Twilio = Un assistant alla volta**
-   - Se colleghi il numero a un nuovo assistant, il vecchio collegamento viene sovrascritto
-   - Per avere più clienti simultanei, servono più numeri Twilio
+1. **⚠️ UN NUMERO TWILIO = UN CLIENTE (NON CONDIVIDERE!)**
+   - Ogni cliente deve avere il SUO numero Twilio dedicato
+   - Se due clienti condividono un numero e ricevono chiamate contemporaneamente, Vapi non può distinguere quale assistant usare
+   - **Mapping 1:1**: Numero Twilio → Assistant Vapi → Cliente
 
 2. **Numero Twilio può fare Voice + WhatsApp**
    - Lo stesso numero può ricevere chiamate (Voice) e inviare WhatsApp
@@ -179,20 +206,34 @@ Quando si chiude il secondo cliente (Gianluca se Federico è il primo, o vicever
    - Twilio: `+39XXXXXXXXX` (E.164 format)
    - WhatsApp: `whatsapp:+39XXXXXXXXX` (prefisso `whatsapp:` obbligatorio)
 
+5. **Gestione Numeri**
+   - Numero Twilio del cliente salvato in Firestore: `orders/{orderId}/twilio_phone_number`
+   - Quando si invia WhatsApp, il sistema legge il numero dal record ordine del cliente
+   - Non serve configurare ogni numero nelle env vars (solo default/fallback)
+
 ---
 
-## ✅ Checklist Setup
+## ✅ Checklist Setup (PER OGNI CLIENTE)
 
-- [ ] Numero Twilio acquistato/configurato
+### Cliente 1 (Federico o Gianluca)
+- [ ] Numero Twilio DEDICATO acquistato/configurato
 - [ ] WhatsApp Business API abilitato sul numero
-- [ ] Numero Twilio collegato a Vapi assistant (primo cliente)
-- [ ] Environment variables configurate (Vercel + GCP)
+- [ ] Numero Twilio collegato a Vapi assistant del cliente
+- [ ] Environment variables configurate (Vercel + GCP) - solo default/fallback
 - [ ] Webhook Vapi configurato correttamente
-- [ ] Cliente ha configurato inoltro chiamata
+- [ ] Cliente ha configurato inoltro chiamata dal suo numero fisso → suo numero Twilio
 - [ ] Test chiamata end-to-end funzionante
 - [ ] Test WhatsApp ricevuto correttamente
 - [ ] Dati chiamata salvati in Firestore
 - [ ] Dashboard cliente mostra lead e chiamate
+
+### Cliente 2 (l'altro)
+- [ ] **NUOVO** numero Twilio DEDICATO acquistato/configurato (NON lo stesso del primo!)
+- [ ] WhatsApp Business API abilitato sul numero
+- [ ] Numero Twilio collegato a Vapi assistant del cliente
+- [ ] Cliente ha configurato inoltro chiamata dal suo numero fisso → suo numero Twilio
+- [ ] Test chiamata end-to-end funzionante
+- [ ] Test chiamate simultanee: entrambi i clienti possono ricevere chiamate contemporaneamente
 
 ---
 

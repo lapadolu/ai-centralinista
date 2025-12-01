@@ -78,11 +78,53 @@ def generate_recommendation(tipo_richiesta, tipo_immobile, zona, budget, note):
     else:
         return f"→ *{action}*"
 
-def send_whatsapp_notification(client_info, caller_number, transcript='', call_id='', duration=0, destination_override=None):
-    """Send WhatsApp notification with full summary to real estate agent."""
+def send_whatsapp_notification(client_info, caller_number, transcript='', call_id='', duration=0, destination_override=None, order_id=None):
+    """
+    Send WhatsApp notification with full summary to real estate agent.
+    
+    Args:
+        client_info: Dict with client information
+        caller_number: Phone number of the caller
+        transcript: Call transcript (optional)
+        call_id: Vapi call ID
+        duration: Call duration in seconds
+        destination_override: WhatsApp destination override (for zone routing)
+        order_id: Order ID to get Twilio number from (if None, uses env var)
+    """
     
     if not twilio_client:
         logging.error("Twilio client not initialized")
+        return False
+    
+    # Get Twilio WhatsApp number - priorità: order number > env var > default
+    from_number = TWILIO_WHATSAPP_NUMBER  # Default fallback
+    
+    if order_id:
+        try:
+            from google.cloud import firestore
+            db = firestore.Client()
+            order_ref = db.collection('orders').document(order_id)
+            order_doc = order_ref.get()
+            
+            if order_doc.exists:
+                order_data = order_doc.to_dict()
+                twilio_phone = order_data.get('twilio_phone_number')
+                if twilio_phone:
+                    # Format: ensure whatsapp: prefix
+                    if not twilio_phone.startswith('whatsapp:'):
+                        from_number = f"whatsapp:{twilio_phone}"
+                    else:
+                        from_number = twilio_phone
+                    logging.info(f"Using Twilio number from order {order_id}: {from_number}")
+                else:
+                    logging.warning(f"Order {order_id} has no twilio_phone_number, using env var")
+            else:
+                logging.warning(f"Order {order_id} not found, using env var")
+        except Exception as e:
+            logging.error(f"Error getting Twilio number from order {order_id}: {e}, using env var")
+    
+    if not from_number:
+        logging.error("No Twilio WhatsApp number available (neither from order nor env var)")
         return False
     
     # Format message
@@ -176,7 +218,7 @@ def send_whatsapp_notification(client_info, caller_number, transcript='', call_i
         
         message_response = twilio_client.messages.create(
             body=message,
-            from_=TWILIO_WHATSAPP_NUMBER,
+            from_=from_number,  # Usa numero dall'ordine o env var
             to=destination
         )
         

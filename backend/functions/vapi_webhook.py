@@ -486,7 +486,8 @@ def handle_end_of_call(event_data):
                 transcript, 
                 call_id, 
                 duration,
-                destination_whatsapp  # Agente specifico per zona
+                destination_whatsapp,  # Agente specifico per zona
+                order_id  # Passa order_id per usare numero Twilio del cliente
             )
             logging.info(f"WhatsApp notification sent to {destination_whatsapp} for call {call_id}")
         except Exception as e:
