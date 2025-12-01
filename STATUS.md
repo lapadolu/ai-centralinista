@@ -1,6 +1,6 @@
 # Status Progetto - FIXER by Helping Hand
 
-**Ultimo aggiornamento:** 2025-01-28
+**Ultimo aggiornamento:** 2025-01-28 (sera)
 
 ---
 
@@ -42,6 +42,11 @@
 - ✅ **Security headers** - Strict-Transport-Security, X-Frame-Options, X-Content-Type-Options, Referrer-Policy
 - ✅ **Admin panel esteso** - API costs monitoring, system health, gestione ordini completa
 - ✅ **Fix accessibilità sito** - HTTPS redirect, middleware protezione admin routes
+- ✅ **Account admin creato** - Ludovico Marioli (ludovico.marioli@gmail.com) con accesso completo
+- ✅ **Admin dashboard fixata** - rimossa sezione clienti duplicata, dati reali da Firestore, API stats
+- ✅ **Dashboard utenti ridisegnata** - design crema con accenti rosso mattone, molto dettagliata e utile
+- ✅ **Supporto segreteria personale** - aggiunto industry "personale" per Ian, prompt e structured outputs personalizzati
+- ✅ **Fix numero Twilio** - ogni cliente ha numero dedicato (non condiviso), sistema legge numero da ordine per WhatsApp
 
 ### Implementazioni Core
 - ✅ **Sistema di autenticazione** - NextAuth.js con Firestore, supporto admin/client
@@ -74,7 +79,7 @@
   - Admin: `/api/admin/orders/*`, `/api/admin/users/*`
   - Billing: `/api/billing/create-checkout`, `/api/billing/webhook`, `/api/billing/check-trial`
   - Support: `/api/support/chat`, `/api/support/consultation`
-  - Admin: `/api/admin/api-costs`, `/api/admin/system-health`
+  - Admin: `/api/admin/api-costs`, `/api/admin/system-health`, `/api/admin/stats`, `/api/admin/create-admin`, `/api/admin/create-ian`
   - GDPR: `/api/gdpr/consent` - Registrazione consenso GDPR
 - ✅ **Email notifications** - sistema Resend implementato (da configurare quando disponibile)
 - ✅ **Test call automation** - sistema per testare assistant Vapi
@@ -93,6 +98,9 @@
 - ✅ **GDPR compliance** - Privacy Policy completa (Ludovico Marioli, P.IVA 14405660961, Via Alfonso Lamarmora 40, 20122 Milano), Terms of Service, Cookie Policy, GDPR Rights page, API endpoint per consenso esplicito
 - ✅ **Design system** - tema "brick red" (#8B3A2F, #A0524A) con palette elegante, spaziature aumentate, sezioni strutturate, contrasti ottimizzati
 - ✅ **Gestione numeri Twilio** - API per aggiungere manualmente numeri Twilio esistenti (`/api/admin/orders/[orderId]/set-twilio-number`)
+- ✅ **Numero Twilio per cliente** - sistema legge numero dall'ordine quando invia WhatsApp (ogni cliente usa il suo numero)
+- ✅ **Account admin** - sistema completo per creare e gestire account admin
+- ✅ **Supporto segreteria personale** - industry "personale" con prompt e structured outputs dedicati
 
 ### Deployment
 - ✅ **Cloud Function `vapi-webhook`** deployata su GCP
@@ -297,11 +305,18 @@ node scripts/generate-password-hash.js
 - ✅ **Sito non accessibile** - Configurato dominio root con redirect, DNS in propagazione
 - ✅ **Design poco leggibile** - Migrato da cyberpunk a tema brick red elegante, contrasti ottimizzati
 - ✅ **Sezioni cluttered** - Aumentate spaziature, sezioni meglio strutturate
+- ✅ **Dashboard utenti poco leggibile** - Ridisegnata con base crema e accenti rosso mattone, molto più chiara
+- ✅ **Admin dashboard con dati fake** - Sostituiti con dati reali da Firestore tramite API `/api/admin/stats`
+- ✅ **Sezione clienti duplicata in admin** - Rimossa (lista completa in `/admin/clients`)
+- ✅ **Bottone "Nuovo Cliente" non funzionante** - Rimosso
+- ✅ **Numero Twilio condiviso** - Fixato: ogni cliente usa il suo numero (sistema legge da ordine)
 
 ### Problemi Aperti
-- ⏳ **Propagazione DNS** - Attesa propagazione DNS per `helping-hand.it` (5-10 minuti)
-- ⚠️ **Numero Twilio italiano** - Manca numero italiano per produzione (Federico ha piano abbonamento)
-- [ ] **Modifiche bot Vapi** - Aggiungere richiesta consenso GDPR al bot (task esterno)
+- ⚠️ **Numero Twilio per Federico** - Da configurare quando disponibile
+- ⚠️ **Numero Twilio per Gianluca** - Da configurare quando disponibile
+- ⚠️ **Numero Twilio per Ian** - Da configurare quando disponibile
+- [ ] **Modifiche bot Vapi** - Aggiungere richiesta consenso GDPR al bot (task esterno, vedi `MODIFICHE_BOT_VAPI.md`)
+- [ ] **Setup Ian** - Creare account e ordine per Ian (segreteria personale)
 
 ---
 
@@ -318,19 +333,21 @@ node scripts/generate-password-hash.js
 - ✅ API routes tutte implementate e collegate a Firestore
 - ✅ Cloud Function deployata e funzionante
 - ✅ Sistema billing Stripe
-- ✅ Notifiche WhatsApp
+- ✅ Notifiche WhatsApp (ogni cliente usa il suo numero Twilio)
 - ✅ Validazione input con Zod (schemi separati frontend/backend)
 - ✅ Sistema di routing zone → agenti
 - ✅ GDPR compliance completa (Privacy, Terms, Cookie Policy, consenso)
-- ✅ Design system elegante (brick red theme)
-- ✅ Admin panel esteso (API costs, system health)
+- ✅ Design system elegante (brick red theme per admin, crema per utenti)
+- ✅ Admin panel esteso (API costs, system health, stats reali)
 - ✅ Domini configurati (`www.helping-hand.it`, redirect root)
 - ✅ Security headers e HTTPS redirect
+- ✅ Account admin funzionante
+- ✅ Supporto segreteria personale (industry "personale")
 
 ### Cosa manca:
-- ⏳ Propagazione DNS (in corso, 5-10 minuti)
-- ⚠️ Numero Twilio italiano per Federico
-- ⚠️ Test end-to-end completo
+- ⚠️ Numeri Twilio per clienti (Federico, Gianluca, Ian) - da configurare quando disponibili
+- ⚠️ Setup completo Ian (creare account e ordine)
+- ⚠️ Test end-to-end completo con numeri reali
 - ⚠️ Modifiche bot Vapi (consenso GDPR)
 - ⚠️ Configurazione Resend (opzionale)
 
@@ -347,5 +364,5 @@ node scripts/generate-password-hash.js
 
 ---
 
-**Ultima revisione:** 2025-01-28
-**Prossima revisione:** Dopo propagazione DNS e test accessibilità
+**Ultima revisione:** 2025-01-28 (sera)
+**Prossima revisione:** Dopo configurazione numeri Twilio e test end-to-end
