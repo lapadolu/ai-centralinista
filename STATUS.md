@@ -1,6 +1,6 @@
 # Status Progetto - FIXER by Helping Hand
 
-**Ultimo aggiornamento:** 2025-01-27 (sera)
+**Ultimo aggiornamento:** 2025-01-28
 
 ---
 
@@ -36,6 +36,12 @@
 - ✅ **Analytics con dati reali** - creata API `/api/dashboard/analytics` che calcola tutto dalle chiamate reali
 - ✅ **Dashboard accessibile senza ordine** - se utente ha chiamate, può vedere dashboard anche senza ordine formale
 - ✅ **Configurazione Vercel** - creato vercel.json nella root con root directory dashboard
+- ✅ **GDPR Compliance completa** - Privacy Policy, Terms, Cookie Policy, GDPR Rights, consenso esplicito
+- ✅ **Design sistema** - tema "brick red" elegante e professionale, sezioni strutturate, spaziature ottimizzate
+- ✅ **Configurazione dominio** - `www.helping-hand.it` configurato su Vercel, redirect root → www
+- ✅ **Security headers** - Strict-Transport-Security, X-Frame-Options, X-Content-Type-Options, Referrer-Policy
+- ✅ **Admin panel esteso** - API costs monitoring, system health, gestione ordini completa
+- ✅ **Fix accessibilità sito** - HTTPS redirect, middleware protezione admin routes
 
 ### Implementazioni Core
 - ✅ **Sistema di autenticazione** - NextAuth.js con Firestore, supporto admin/client
@@ -54,6 +60,8 @@
   - `/admin` - Dashboard admin
   - `/admin/clients` - Gestione clienti
   - `/admin/setup` - Setup ordini nuovi clienti
+  - `/admin/api-costs` - Monitoraggio costi API e utilizzo
+  - `/admin/system` - System health e status servizi
 - ✅ **API Routes complete** - tutte le routes implementate e testate
   - Auth: `/api/auth/signup`, `/api/auth/[...nextauth]`
   - Dashboard: 
@@ -66,6 +74,8 @@
   - Admin: `/api/admin/orders/*`, `/api/admin/users/*`
   - Billing: `/api/billing/create-checkout`, `/api/billing/webhook`, `/api/billing/check-trial`
   - Support: `/api/support/chat`, `/api/support/consultation`
+  - Admin: `/api/admin/api-costs`, `/api/admin/system-health`
+  - GDPR: `/api/gdpr/consent` - Registrazione consenso GDPR
 - ✅ **Email notifications** - sistema Resend implementato (da configurare quando disponibile)
 - ✅ **Test call automation** - sistema per testare assistant Vapi
 - ✅ **Admin role checks** - verifiche ruolo admin su tutte le routes sensibili
@@ -80,6 +90,9 @@
 - ✅ **Guida call forwarding** - pagina completa con istruzioni per tutti i provider italiani
 - ✅ **Sistema onboarding** - utenti nuovi vedono schermata esplicativa invece di dashboard vuota
 - ✅ **Analytics real-time** - calcolo automatico di intent breakdown, top zones, property types, features, budget medio, conversion rate
+- ✅ **GDPR compliance** - Privacy Policy completa (Ludovico Marioli, P.IVA 14405660961, Via Alfonso Lamarmora 40, 20122 Milano), Terms of Service, Cookie Policy, GDPR Rights page, API endpoint per consenso esplicito
+- ✅ **Design system** - tema "brick red" (#8B3A2F, #A0524A) con palette elegante, spaziature aumentate, sezioni strutturate, contrasti ottimizzati
+- ✅ **Gestione numeri Twilio** - API per aggiungere manualmente numeri Twilio esistenti (`/api/admin/orders/[orderId]/set-twilio-number`)
 
 ### Deployment
 - ✅ **Cloud Function `vapi-webhook`** deployata su GCP
@@ -87,11 +100,12 @@
   - Region: `europe-west1`
   - Status: `ACTIVE`
   - Funzionalità: gestisce eventi Vapi, salva chiamate in Firestore, invia notifiche WhatsApp
-- ✅ **Vercel Frontend** - progetto configurato
-  - Progetto: `ai-centralinista`
-  - Root Directory: `dashboard` (da configurare nelle settings Vercel)
+- ✅ **Vercel Frontend** - progetto configurato e deployato
+  - Progetto: `fixer-dashboard` (consolidato)
+  - Root Directory: `dashboard` (configurato)
   - Auto-deploy: collegato a GitHub `lapadolu/ai-centralinista`
-  - ⚠️ **ATTENZIONE**: Configurare Root Directory = `dashboard` nelle settings Vercel
+  - Domini: `www.helping-hand.it` (attivo), `helping-hand.it` (redirect a www)
+  - SSL: certificati automatici Vercel
 
 ### Configurazioni
 - ✅ **Vercel environment variables** - configurate
@@ -113,11 +127,10 @@
 
 ### Deployment Vercel
 - ✅ **vercel.json creato** - configurazione nella root del progetto
-- ⚠️ **Configurare Root Directory** nelle settings Vercel → `dashboard` (URGENTE)
-  - Vai su: https://vercel.com/lapadolus-projects/ai-centralinista/settings
-  - General → Root Directory → imposta: `dashboard`
-- [ ] **Eliminare progetto duplicato** `fixer-dashboard` (se non serve più)
-- [ ] **Verificare deploy** dopo configurazione root directory
+- ✅ **Root Directory configurato** - `dashboard` impostato nelle settings Vercel
+- ✅ **Progetto consolidato** - `fixer-dashboard` come progetto principale
+- ✅ **Domini configurati** - `www.helping-hand.it` attivo, `helping-hand.it` con redirect a www
+- ⏳ **Propagazione DNS** - in attesa propagazione DNS per dominio root (5-10 minuti)
 
 ### Integrazione Numero Twilio Italiano
 - [ ] Ricevere numero Twilio italiano (free-toll richiesto)
@@ -146,8 +159,8 @@
 - [ ] **Resend**: configurare quando disponibile (email notifications)
   - API Key: Configurata in Vercel environment variables
   - From Email: `Helping Hand <noreply@helping-hand.it>` (dopo verifica dominio)
-- [ ] **Custom domain**: configurare `www.helping-hand.it` su Vercel
 - [ ] **Sentry**: verificare configurazione error tracking
+- [ ] **Modifiche bot Vapi**: aggiungere richiesta consenso GDPR al bot (vedi `MODIFICHE_BOT_VAPI.md`)
 
 ---
 
@@ -277,11 +290,15 @@ node scripts/generate-password-hash.js
 - ✅ **Utenti senza abbonamento vedevano dashboard vuota** - Aggiunta schermata onboarding
 - ✅ **Favicon mancante** - Configurato correttamente
 - ✅ **Errore TypeScript guida-call-forwarding** - Fixato
+- ✅ **Deploy Vercel falliva** - Risolto consolidando progetti, configurando root directory, fix dipendenze TypeScript
+- ✅ **Sito non accessibile** - Configurato dominio root con redirect, DNS in propagazione
+- ✅ **Design poco leggibile** - Migrato da cyberpunk a tema brick red elegante, contrasti ottimizzati
+- ✅ **Sezioni cluttered** - Aumentate spaziature, sezioni meglio strutturate
 
 ### Problemi Aperti
-- ⚠️ **Deploy Vercel fallisce** - Necessario configurare Root Directory = `dashboard` nelle settings Vercel
-- ⚠️ **Progetto duplicato** - `fixer-dashboard` da eliminare o scollegare dalla repo
-- ⚠️ **Numero Twilio italiano** - Manca numero italiano per produzione
+- ⏳ **Propagazione DNS** - Attesa propagazione DNS per `helping-hand.it` (5-10 minuti)
+- ⚠️ **Numero Twilio italiano** - Manca numero italiano per produzione (Federico ha piano abbonamento)
+- [ ] **Modifiche bot Vapi** - Aggiungere richiesta consenso GDPR al bot (task esterno)
 
 ---
 
@@ -301,11 +318,17 @@ node scripts/generate-password-hash.js
 - ✅ Notifiche WhatsApp
 - ✅ Validazione input con Zod (schemi separati frontend/backend)
 - ✅ Sistema di routing zone → agenti
+- ✅ GDPR compliance completa (Privacy, Terms, Cookie Policy, consenso)
+- ✅ Design system elegante (brick red theme)
+- ✅ Admin panel esteso (API costs, system health)
+- ✅ Domini configurati (`www.helping-hand.it`, redirect root)
+- ✅ Security headers e HTTPS redirect
 
 ### Cosa manca:
-- ⚠️ Configurazione Root Directory Vercel (URGENTE - nelle settings)
-- ⚠️ Numero Twilio italiano
+- ⏳ Propagazione DNS (in corso, 5-10 minuti)
+- ⚠️ Numero Twilio italiano per Federico
 - ⚠️ Test end-to-end completo
+- ⚠️ Modifiche bot Vapi (consenso GDPR)
 - ⚠️ Configurazione Resend (opzionale)
 
 ---
@@ -313,11 +336,13 @@ node scripts/generate-password-hash.js
 ## 📞 Supporto e Contatti
 
 - **Repository**: `lapadolu/ai-centralinista` su GitHub
-- **Vercel Project**: `ai-centralinista`
+- **Vercel Project**: `fixer-dashboard`
 - **GCP Project**: `ai-centralinista-2025`
-- **Domain**: `ai-centralinista.vercel.app` (temporaneo)
+- **Domain**: `www.helping-hand.it` (produzione), `helping-hand.it` (redirect)
+- **Company**: Ludovico Marioli, P.IVA 14405660961, SDI T9K4ZHO
+- **Address**: Via Alfonso Lamarmora 40, 20122 Milano (MI), Italia
 
 ---
 
-**Ultima revisione:** 2025-01-27
-**Prossima revisione:** Dopo configurazione Vercel e test completi
+**Ultima revisione:** 2025-01-28
+**Prossima revisione:** Dopo propagazione DNS e test accessibilità
