@@ -22,6 +22,12 @@ module.exports = {
           light: '#f8f4ef',
           dark: '#e8ddd0',
         },
+        cream: {
+          DEFAULT: '#faf8f3',
+          light: '#fefdfb',
+          dark: '#f5f2eb',
+          warm: '#f8f5f0',
+        },
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
