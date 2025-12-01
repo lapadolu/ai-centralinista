@@ -172,6 +172,7 @@ def send_whatsapp_notification(client_info, caller_number, transcript='', call_i
     try:
         logging.info(f"Sending WhatsApp to {destination}")
         logging.info(f"Message length: {len(message)} chars")
+        logging.info(f"From: {TWILIO_WHATSAPP_NUMBER}")
         
         message_response = twilio_client.messages.create(
             body=message,
@@ -179,22 +180,17 @@ def send_whatsapp_notification(client_info, caller_number, transcript='', call_i
             to=destination
         )
         
-        logging.info(f"WhatsApp sent successfully! SID: {message_response.sid}")
+        logging.info(f"WhatsApp sent successfully! SID: {message_response.sid}, Status: {message_response.status}")
         return True
     except Exception as e:
-        logging.error(f"WhatsApp send failed: {e}")
-        # Try SMS fallback if configured
-        twilio_phone = os.environ.get('TWILIO_PHONE_NUMBER')
-        destination_sms = os.environ.get('TWILIO_DESTINATION_SMS', '+393394197445')
-        
-        if twilio_phone:
-            try:
-                twilio_client.messages.create(
-                    body=f"[CENTRALINISTA AI]\n\n{message}",
-                    from_=twilio_phone,
-                    to=destination_sms
-                )
-                return True
-            except:
-                pass
-        return False
+        # Se Twilio/WhatsApp fallisce, è un bug nel codice o configurazione
+        # Log dettagliato per debugging
+        logging.error(f"ERROR: WhatsApp send failed - this is a code/config issue, not Twilio/WhatsApp failure")
+        logging.error(f"Error type: {type(e).__name__}")
+        logging.error(f"Error message: {str(e)}")
+        logging.error(f"Destination: {destination}")
+        logging.error(f"From number: {TWILIO_WHATSAPP_NUMBER}")
+        logging.error(f"Twilio Account SID configured: {bool(TWILIO_ACCOUNT_SID)}")
+        logging.error(f"Twilio Auth Token configured: {bool(TWILIO_AUTH_TOKEN)}")
+        # Rilancia l'eccezione per far sapere al chiamante che c'è un problema
+        raise
