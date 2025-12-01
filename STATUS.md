@@ -120,6 +120,9 @@
 - ✅ **Firestore security rules** - configurate in `backend/firestore.rules`
 - ✅ **Admin checks** - verifiche ruolo su tutte le routes admin
 - ✅ **Password hashing** - bcrypt con 12 rounds
+- ✅ **Security headers** - Strict-Transport-Security, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy
+- ✅ **HTTPS redirect** - middleware per forzare HTTPS in produzione
+- ✅ **GDPR compliance** - Privacy Policy, Terms, Cookie Policy, consenso esplicito, diritti utente
 
 ---
 
