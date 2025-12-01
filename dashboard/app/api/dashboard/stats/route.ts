@@ -113,13 +113,19 @@ export async function GET(request: NextRequest) {
         nome?: string;
         telefono?: string;
         zona?: string;
+        tipo_richiesta?: string;
+        tipo_immobile?: string;
+        budget?: string;
       };
       return {
         id: data.call_id,
         nome: clientInfo.nome || 'Non specificato',
         telefono: clientInfo.telefono || data.customer_number,
         zona: clientInfo.zona || 'Non specificato',
-        timestamp: data.ended_at?.toDate?.()?.toLocaleString('it-IT') || new Date().toLocaleString('it-IT'),
+        tipo_richiesta: clientInfo.tipo_richiesta || 'Non specificato',
+        tipo_immobile: clientInfo.tipo_immobile || 'Non specificato',
+        budget: clientInfo.budget || 'Non specificato',
+        timestamp: data.ended_at?.toDate?.()?.toISOString() || data.started_at?.toDate?.()?.toISOString() || new Date().toISOString(),
         duration: data.duration || 0,
       };
     });
